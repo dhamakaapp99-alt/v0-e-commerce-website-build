@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Heart, Share2, ChevronLeft } from "lucide-react"
@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation"
 import { useCart } from "@/hooks/use-cart"
 
 export default function ProductDetail({ params }) {
+  const { id } = use(params)
   const router = useRouter()
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -19,11 +20,11 @@ export default function ProductDetail({ params }) {
 
   useEffect(() => {
     fetchProduct()
-  }, [params.id])
+  }, [id])
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch(`/api/products/${params.id}`)
+      const response = await fetch(`/api/products/${id}`)
       const data = await response.json()
       if (data.success) {
         setProduct(data.product)
