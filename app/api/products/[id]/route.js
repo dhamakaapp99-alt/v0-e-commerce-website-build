@@ -3,9 +3,10 @@ import { ObjectId } from "mongodb"
 
 export async function GET(request, { params }) {
   try {
+    const { id } = await params
     const db = await getDatabase()
     const product = await db.collection("products").findOne({
-      _id: new ObjectId(params.id),
+      _id: new ObjectId(id),
     })
 
     if (!product) {
