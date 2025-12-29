@@ -2,6 +2,8 @@ import { getDatabase } from "@/lib/mongodb"
 import { createRazorpayOrder } from "@/lib/razorpay"
 import { ObjectId } from "mongodb"
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request) {
   try {
     const db = await getDatabase()

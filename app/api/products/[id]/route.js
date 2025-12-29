@@ -4,6 +4,11 @@ import { ObjectId } from "mongodb"
 export async function GET(request, { params }) {
   try {
     const { id } = await params
+
+    if (!ObjectId.isValid(id)) {
+      return Response.json({ success: false, error: "Invalid Product ID" }, { status: 400 })
+    }
+
     const db = await getDatabase()
     const product = await db.collection("products").findOne({
       _id: new ObjectId(id),
