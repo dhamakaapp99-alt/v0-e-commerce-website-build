@@ -33,19 +33,19 @@ A fully functional, mobile-first e-commerce platform built with Next.js, MongoDB
 1. **Clone or download the project**
 
 2. **Install dependencies**
-   ```bash
+   \`\`\`bash
    npm install
-   ```
+   \`\`\`
 
 3. **Setup Environment Variables**
    
    Create a `.env.local` file in the project root:
-   ```bash
+   \`\`\`bash
    cp .env.example .env.local
-   ```
+   \`\`\`
    
    Update `.env.local` with your credentials:
-   ```
+   \`\`\`
    # MongoDB Configuration
    MONGODB_URI=mongodb+srv://username:password@cluster0.hnr8nsa.mongodb.net/mayra_collection
 
@@ -55,25 +55,25 @@ A fully functional, mobile-first e-commerce platform built with Next.js, MongoDB
 
    # API URL
    NEXT_PUBLIC_API_URL=http://localhost:3000
-   ```
+   \`\`\`
 
 4. **Initialize Database** (First time only)
    
    Run the database initialization script to create collections and indexes:
-   ```bash
+   \`\`\`bash
    node scripts/init-db.js
-   ```
+   \`\`\`
 
 5. **Start Development Server**
-   ```bash
+   \`\`\`bash
    npm run dev
-   ```
+   \`\`\`
 
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Project Structure
 
-```
+\`\`\`
 mayra-collection/
 ├── app/
 │   ├── api/                    # API routes
@@ -99,7 +99,7 @@ mayra-collection/
 ├── scripts/
 │   └── init-db.js             # Database initialization
 └── public/                     # Static files
-```
+\`\`\`
 
 ## Usage
 
@@ -130,7 +130,7 @@ mayra-collection/
 
 Create a `.env.local` file with the following variables:
 
-```
+\`\`\`
 # MongoDB Connection String
 MONGODB_URI=mongodb+srv://username:password@cluster0.hnr8nsa.mongodb.net/database_name
 
@@ -141,7 +141,7 @@ RAZORPAY_KEY_SECRET=your_key_secret
 
 # API Base URL (for development)
 NEXT_PUBLIC_API_URL=http://localhost:3000
-```
+\`\`\`
 
 ## Payment Integration
 
@@ -197,16 +197,16 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 ### Running Tests
 
 For database initialization:
-```bash
+\`\`\`bash
 node scripts/init-db.js
-```
+\`\`\`
 
 ### Building for Production
 
-```bash
+\`\`\`bash
 npm run build
 npm start
-```
+\`\`\`
 
 ## Deployment
 
