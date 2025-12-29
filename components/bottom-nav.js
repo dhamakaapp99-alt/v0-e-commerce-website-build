@@ -1,11 +1,22 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Home, ShoppingBag, ShoppingCart, User } from "lucide-react"
+import { useEffect, useState } from "react"
 
 export default function BottomNav() {
   const pathname = usePathname()
+  const router = useRouter()
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user")
+    const isLoggedIn = localStorage.getItem("isLoggedIn")
+    if (isLoggedIn && userData) {
+      setUser(JSON.parse(userData))
+    }
+  }, [])
 
   // Don't show bottom nav on admin routes
   if (pathname.startsWith("/admin")) {
@@ -16,7 +27,7 @@ export default function BottomNav() {
     { href: "/", label: "Home", icon: Home },
     { href: "/shop", label: "Shop", icon: ShoppingBag },
     { href: "/cart", label: "Cart", icon: ShoppingCart },
-    { href: "/account", label: "Account", icon: User },
+    { href: user ? "/profile" : "/login", label: user ? "Account" : "Sign In", icon: User },
   ]
 
   return (
@@ -30,7 +41,7 @@ export default function BottomNav() {
             <Link key={item.href} href={item.href} className="flex-1">
               <div
                 className={`flex flex-col items-center justify-center py-3 px-2 ${
-                  isActive ? "text-primary border-t-2 border-primary" : "text-muted-foreground"
+                  isActive ? "text-teal-600 border-t-2 border-teal-600" : "text-muted-foreground"
                 }`}
               >
                 <Icon size={24} />
