@@ -5,10 +5,11 @@ import Header from "@/components/header"
 import { ChevronRight, ShoppingBag, Heart, Zap, Star, TrendingUp, MapPin, Store, Search, Sparkles, ArrowRight } from "lucide-react"
 
 export default async function Home() {
+  
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/api/products?limit=8`, {
     cache: "no-store",
   })
-  
+
   const data = await response.json()
   const products = data.success ? data.products : []
 
