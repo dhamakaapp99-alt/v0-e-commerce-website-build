@@ -1,12 +1,40 @@
 "use client"
 
 import Link from "next/link"
-import { ShoppingCart, Menu, Search, X } from "lucide-react"
-import { useState } from "react"
+import { ShoppingCart, Menu, Search, X, User, LogOut } from "lucide-react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [user, setUser] = useState(null)
+  const [cartCount, setCartCount] = useState(0)
+  const router = useRouter()
+
+  useEffect(() => {
+    // Check if user is logged in
+    const userData = localStorage.getItem("user")
+    const isLoggedIn = localStorage.getItem("isLoggedIn")
+    if (isLoggedIn && userData) {
+      setUser(JSON.parse(userData))
+    }
+
+    // Get cart count
+    const cart = localStorage.getItem("cart")
+    if (cart) {
+      const items = JSON.parse(cart)
+      setCartCount(items.length)
+    }
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem("user")
+    localStorage.removeItem("isLoggedIn")
+    setUser(null)
+    setMobileMenuOpen(false)
+    router.push("/")
+  }
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
@@ -28,10 +56,10 @@ export default function Header() {
             <Link href="/shop" className="text-gray-700 hover:text-gray-900 font-medium transition">
               Shop
             </Link>
-            <Link href="/about" className="text-gray-700 hover:text-gray-900 font-medium transition">
+            <Link href="/" className="text-gray-700 hover:text-gray-900 font-medium transition">
               About
             </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-gray-900 font-medium transition">
+            <Link href="/" className="text-gray-700 hover:text-gray-900 font-medium transition">
               Contact
             </Link>
           </nav>
@@ -43,10 +71,36 @@ export default function Header() {
             </button>
             <Link href="/cart" className="p-2 hover:bg-gray-100 rounded-lg transition relative">
               <ShoppingCart className="w-5 h-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-teal-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                  {cartCount}
+                </span>
+              )}
             </Link>
-            <Button variant="outline" size="sm" className="hidden sm:inline-block bg-transparent">
-              Sign In
-            </Button>
+
+            {user ? (
+              <div className="hidden sm:flex items-center gap-3">
+                <Link href="/profile">
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-teal-600 hover:bg-teal-50">
+                    <User size={18} />
+                    <span className="text-sm font-medium">{user.name?.split(" ")[0]}</span>
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="hidden sm:flex gap-2">
+                <Link href="/login">
+                  <Button variant="ghost" size="sm" className="text-gray-700 hover:bg-gray-100">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button size="sm" className="bg-teal-600 hover:bg-teal-700 text-white">
+                    Sign Up
+                  </Button>
+                </Link>
+              </div>
+            )}
 
             {/* Mobile Menu Toggle */}
             <button
@@ -64,13 +118,39 @@ export default function Header() {
             <Link href="/shop" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
               Shop
             </Link>
-            <Link href="/about" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <Link href="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
               About
             </Link>
-            <Link href="/contact" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <Link href="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
               Contact
             </Link>
-            <Button className="w-full mt-2">Sign In</Button>
+
+            {user ? (
+              <>
+                <Link href="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded font-medium">
+                  <User size={18} className="inline mr-2" />
+                  My Profile
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded font-medium"
+                >
+                  <LogOut size={18} className="inline mr-2" />
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="outline" className="w-full mt-2 text-teal-600 border-teal-600 bg-transparent">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button className="w-full mt-2 bg-teal-600 hover:bg-teal-700 text-white">Sign Up</Button>
+                </Link>
+              </>
+            )}
           </nav>
         )}
       </div>

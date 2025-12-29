@@ -15,6 +15,7 @@ export default function Checkout() {
   const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
+  const [user, setUser] = useState(null)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,10 +29,48 @@ export default function Checkout() {
 
   useEffect(() => {
     setMounted(true)
-  }, [])
+
+    const userData = localStorage.getItem("user")
+    const isLoggedIn = localStorage.getItem("isLoggedIn")
+
+    if (!isLoggedIn || !userData) {
+      // Redirect to login if not authenticated
+      router.push("/login")
+      return
+    }
+
+    const parsedUser = JSON.parse(userData)
+    setUser(parsedUser)
+
+    // Pre-fill form with user data
+    setFormData((prev) => ({
+      ...prev,
+      name: parsedUser.name || "",
+      email: parsedUser.email || "",
+      phone: parsedUser.phone || "",
+    }))
+  }, [router])
 
   if (!mounted) {
     return null
+  }
+
+  if (!user) {
+    return (
+      <>
+        <Header />
+        <div className="min-h-screen bg-white flex items-center justify-center pb-24">
+          <div className="text-center">
+            <p className="text-gray-600 mb-4">Please log in to proceed with checkout</p>
+            <Link href="/login">
+              <Button size="lg" className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-6 px-8">
+                Go to Login
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </>
+    )
   }
 
   if (cart.length === 0) {
@@ -42,7 +81,7 @@ export default function Checkout() {
           <div className="text-center">
             <p className="text-gray-600 mb-4">Your cart is empty</p>
             <Link href="/shop">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-semibold py-6 px-8">
+              <Button size="lg" className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-6 px-8">
                 Continue Shopping
               </Button>
             </Link>
@@ -159,6 +198,16 @@ export default function Checkout() {
 
             if (verifyData.success) {
               clearCart()
+              const userOrders = localStorage.getItem(`orders_${user.email}`) || "[]"
+              const orders = JSON.parse(userOrders)
+              orders.push({
+                id: orderData.orderId,
+                total: total + shipping,
+                createdAt: new Date().toISOString(),
+                items: cart,
+              })
+              localStorage.setItem(`orders_${user.email}`, JSON.stringify(orders))
+
               router.push(`/order-success?orderId=${orderData.orderId}`)
             } else {
               alert("Payment verification failed. Please contact support.")
@@ -320,7 +369,7 @@ export default function Checkout() {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-6 text-lg rounded-lg flex items-center justify-center gap-2 hidden md:flex"
+                  className="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-6 text-lg rounded-lg flex items-center justify-center gap-2 hidden md:flex"
                   disabled={loading}
                 >
                   <Lock size={20} />
@@ -368,7 +417,7 @@ export default function Checkout() {
                   <Button
                     type="submit"
                     size="lg"
-                    className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-6 text-lg rounded-lg flex items-center justify-center gap-2"
+                    className="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-6 text-lg rounded-lg flex items-center justify-center gap-2"
                     disabled={loading}
                   >
                     <Lock size={20} />
@@ -384,7 +433,7 @@ export default function Checkout() {
             <Button
               type="submit"
               size="lg"
-              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-6 text-lg rounded-lg flex items-center justify-center gap-2"
+              className="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-6 text-lg rounded-lg flex items-center justify-center gap-2"
               disabled={loading}
             >
               <Lock size={20} />

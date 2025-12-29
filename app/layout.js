@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import BottomNav from "@/components/bottom-nav"
+import AuthGuard from "@/components/auth-guard"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
@@ -45,7 +46,7 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-title" content="Mayra Collection" />
       </head>
       <body className={`font-sans antialiased`}>
-        {children}
+        <AuthGuard>{children}</AuthGuard>
         <BottomNav />
         <Analytics />
       </body>
