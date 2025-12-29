@@ -3,15 +3,20 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Header from "@/components/header"
 import { ChevronRight, ShoppingBag, Heart, Zap, Star, TrendingUp, MapPin, Store, Search, Sparkles, ArrowRight } from "lucide-react"
+import { getDatabase } from "@/lib/mongodb"
 
 export default async function Home() {
-  
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/api/products?limit=8`, {
-    cache: "no-store",
-  })
-
-  const data = await response.json()
-  const products = data.success ? data.products : []
+  let products = []
+  try {
+    const db = await getDatabase()
+    const productsRaw = await db.collection("products").find({}).sort({ _id: -1 }).limit(8).toArray()
+    products = productsRaw.map((product) => ({
+      ...product,
+      _id: product._id.toString(),
+    }))
+  } catch (error) {
+    console.error("Error fetching products:", error)
+  }
 
   const categories = [
     { name: "New In", icon: "✨", color: "bg-amber-100" },
