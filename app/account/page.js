@@ -2,71 +2,87 @@
 
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { Home } from "lucide-react"
+import { Home, Settings, ShoppingBag } from "lucide-react"
+import Header from "@/components/header"
 
 export default function Account() {
   return (
-    <div className="min-h-screen bg-background pb-24">
-      {/* Header */}
-      <div className="sticky top-0 bg-background border-b z-40 p-4">
-        <h1 className="text-2xl font-bold">My Account</h1>
-      </div>
-
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        {/* Account Info */}
-        <div className="bg-card border rounded-lg p-6 mb-6">
-          <div className="flex items-center mb-6">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-              <span className="text-2xl font-bold text-primary">MC</span>
-            </div>
-            <div className="ml-4">
-              <h2 className="text-xl font-bold">Mayra Collection</h2>
-              <p className="text-muted-foreground text-sm">Premium Clothing Store</p>
+    <>
+      <Header />
+      <div className="min-h-screen bg-background pb-24">
+        {/* Profile Header */}
+        <div className="bg-gradient-to-r from-teal-600 to-teal-700 text-white p-8">
+          <div className="max-w-2xl mx-auto">
+            <div className="flex items-center gap-4">
+              <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center border-2 border-white">
+                <span className="text-3xl font-bold">MC</span>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold">Mayra Collection</h1>
+                <p className="text-teal-100">Premium Clothing Store</p>
+              </div>
             </div>
           </div>
-          <p className="text-sm text-muted-foreground mb-4">
-            Welcome to Mayra Collection. Browse our premium clothing collection and enjoy seamless shopping experience.
-          </p>
         </div>
 
-        {/* Quick Links */}
-        <div className="space-y-3 mb-8">
-          <h3 className="font-bold text-lg mb-4">Quick Links</h3>
-          <Link href="/shop">
-            <Button variant="outline" size="lg" className="w-full justify-start bg-transparent">
-              Browse Products
-            </Button>
-          </Link>
-          <Link href="/cart">
-            <Button variant="outline" size="lg" className="w-full justify-start bg-transparent">
-              My Cart
-            </Button>
-          </Link>
-          <Link href="/">
-            <Button variant="outline" size="lg" className="w-full justify-start bg-transparent">
-              <Home size={18} className="mr-2" />
-              Back to Home
-            </Button>
-          </Link>
-        </div>
+        <div className="max-w-2xl mx-auto px-4 py-8">
+          {/* Welcome Section */}
+          <div className="bg-teal-50 border-l-4 border-teal-600 rounded p-4 mb-8">
+            <p className="text-sm text-teal-900">
+              Welcome to Mayra Collection! Browse our premium clothing collection and enjoy a seamless shopping
+              experience with secure checkout and fast delivery.
+            </p>
+          </div>
 
-        {/* Admin Access */}
-        <div className="bg-card border rounded-lg p-6 mb-8">
-          <h3 className="font-bold text-lg mb-3">Admin Access</h3>
-          <p className="text-sm text-muted-foreground mb-4">Manage products, orders, and inventory</p>
-          <Link href="/admin">
-            <Button size="lg" className="w-full">
-              Go to Admin Dashboard
-            </Button>
-          </Link>
-        </div>
+          {/* Quick Actions */}
+          <div className="mb-8">
+            <h3 className="font-bold text-lg mb-4">Quick Actions</h3>
+            <div className="space-y-3">
+              <Link href="/shop" className="block">
+                <Button variant="outline" size="lg" className="w-full justify-start bg-white hover:bg-gray-50">
+                  <ShoppingBag size={18} className="mr-3" />
+                  Browse Products
+                </Button>
+              </Link>
+              <Link href="/cart" className="block">
+                <Button variant="outline" size="lg" className="w-full justify-start bg-white hover:bg-gray-50">
+                  <ShoppingBag size={18} className="mr-3" />
+                  My Shopping Cart
+                </Button>
+              </Link>
+              <Link href="/" className="block">
+                <Button variant="outline" size="lg" className="w-full justify-start bg-white hover:bg-gray-50">
+                  <Home size={18} className="mr-3" />
+                  Back to Home
+                </Button>
+              </Link>
+            </div>
+          </div>
 
-        {/* Info */}
-        <div className="text-center text-sm text-muted-foreground space-y-2">
-          <p>Mayra Collection © 2025</p>
-          <p>All Rights Reserved</p>
+          {/* Admin Panel Section */}
+          <div className="bg-card border rounded-lg p-6 mb-8">
+            <div className="flex items-center gap-3 mb-4">
+              <Settings className="text-teal-600" size={24} />
+              <h3 className="font-bold text-lg">Admin Dashboard</h3>
+            </div>
+            <p className="text-sm text-muted-foreground mb-6">
+              Access the admin panel to manage products, inventory, orders, and view detailed sales data.
+            </p>
+            <Link href="/admin" className="block">
+              <Button size="lg" className="w-full bg-teal-600 hover:bg-teal-700">
+                Open Admin Dashboard
+              </Button>
+            </Link>
+          </div>
+
+          {/* Store Info */}
+          <div className="bg-gray-50 rounded-lg p-6 text-center text-sm">
+            <p className="font-semibold text-gray-900 mb-1">Mayra Collection</p>
+            <p className="text-muted-foreground mb-4">Trendy. Elegant. Timeless.</p>
+            <p className="text-xs text-muted-foreground">© 2025 Mayra Collection. All Rights Reserved.</p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
