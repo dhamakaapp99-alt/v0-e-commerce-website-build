@@ -3,20 +3,22 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ChevronLeft } from "lucide-react"
+import { ChevronLeft, Upload, X } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 
 export default function NewProduct() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [uploadingImages, setUploadingImages] = useState({})
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     price: "",
     category: "T-Shirts",
     stock: "",
-    images: [""],
+    images: [],
     sizes: [],
     colors: [],
   })
@@ -24,6 +26,9 @@ export default function NewProduct() {
   const CATEGORIES = ["Shirts", "T-Shirts", "Dresses", "Sarees", "Kurti", "Bottoms", "Accessories"]
   const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"]
   const COLOR_OPTIONS = ["Black", "White", "Blue", "Red", "Green", "Yellow", "Pink", "Gray"]
+
+  const CLOUDINARY_UPLOAD_PRESET = "mayra_collection"
+  const CLOUDINARY_CLOUD_NAME = "dewcuqgbd"
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -33,12 +38,50 @@ export default function NewProduct() {
     }))
   }
 
-  const handleImageChange = (index, value) => {
-    const newImages = [...formData.images]
-    newImages[index] = value
+  const handleImageUpload = async (e, index) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploadingImages((prev) => ({
+      ...prev,
+      [index]: true,
+    }))
+
+    try {
+      const formDataForCloudinary = new FormData()
+      formDataForCloudinary.append("file", file)
+      formDataForCloudinary.append("upload_preset", CLOUDINARY_UPLOAD_PRESET)
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: "POST",
+        body: formDataForCloudinary,
+      })
+
+      const data = await response.json()
+      if (data.secure_url) {
+        const newImages = [...formData.images]
+        newImages[index] = data.secure_url
+        setFormData((prev) => ({
+          ...prev,
+          images: newImages,
+        }))
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error)
+      alert("Failed to upload image")
+    } finally {
+      setUploadingImages((prev) => ({
+        ...prev,
+        [index]: false,
+      }))
+    }
+  }
+
+  const removeImage = (index) => {
+    const newImages = formData.images.filter((_, i) => i !== index)
     setFormData((prev) => ({
       ...prev,
-      images: newImages.filter((img) => img.trim() !== ""),
+      images: newImages,
     }))
   }
 
@@ -58,6 +101,12 @@ export default function NewProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    if (formData.images.length === 0) {
+      alert("Please upload at least one image")
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -173,25 +222,62 @@ export default function NewProduct() {
 
           {/* Images */}
           <div>
-            <label className="block text-sm font-semibold mb-2">Product Images (URLs)</label>
-            <div className="space-y-2">
-              {formData.images.map((img, idx) => (
-                <Input
-                  key={idx}
-                  type="url"
-                  placeholder="https://example.com/image.jpg"
-                  value={img}
-                  onChange={(e) => handleImageChange(idx, e.target.value)}
-                />
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setFormData((prev) => ({ ...prev, images: [...prev.images, ""] }))}
-                className="w-full bg-transparent"
-              >
-                + Add Another Image
-              </Button>
+            <label className="block text-sm font-semibold mb-2">Product Images *</label>
+            <div className="space-y-3">
+              {/* Display uploaded images */}
+              {formData.images.length > 0 && (
+                <div className="grid grid-cols-2 gap-3">
+                  {formData.images.map((img, idx) => (
+                    <div key={idx} className="relative group">
+                      <div className="relative w-full h-40 bg-gray-100 rounded-lg overflow-hidden">
+                        <Image
+                          src={img || "/placeholder.svg"}
+                          alt={`Product ${idx + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeImage(idx)}
+                        className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Upload buttons */}
+              <div className="grid grid-cols-2 gap-3">
+                {[0, 1, 2, 3].map((idx) => (
+                  <label
+                    key={idx}
+                    className="flex items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-teal-600 hover:bg-teal-50 transition"
+                  >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, idx)}
+                      disabled={uploadingImages[idx]}
+                      className="hidden"
+                    />
+                    <div className="text-center">
+                      {uploadingImages[idx] ? (
+                        <div className="text-sm text-gray-600">Uploading...</div>
+                      ) : formData.images[idx] ? (
+                        <div className="text-sm text-green-600">✓ Uploaded</div>
+                      ) : (
+                        <>
+                          <Upload size={24} className="mx-auto text-gray-400 mb-1" />
+                          <div className="text-sm text-gray-600">Click to upload</div>
+                        </>
+                      )}
+                    </div>
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
 
