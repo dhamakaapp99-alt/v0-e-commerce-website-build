@@ -18,6 +18,76 @@ export default async function Home() {
     console.error("Error fetching products:", error)
   }
 
+  // Fallback to dummy products if database is empty or connection fails
+  if (products.length === 0) {
+    products = [
+      {
+        _id: "dummy1",
+        name: "Embroidered Anarkali Kurta",
+        price: 2499,
+        images: ["https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=2070&auto=format&fit=crop"],
+        category: "Kurtas",
+        stock: 10
+      },
+      {
+        _id: "dummy2",
+        name: "Cotton Printed Suit Set",
+        price: 1899,
+        images: ["https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?q=80&w=1934&auto=format&fit=crop"],
+        category: "Suits",
+        stock: 15
+      },
+      {
+        _id: "dummy3",
+        name: "Georgette Party Wear Gown",
+        price: 3599,
+        images: ["https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1983&auto=format&fit=crop"],
+        category: "Dresses",
+        stock: 5
+      },
+      {
+        _id: "dummy4",
+        name: "Casual Rayon Top",
+        price: 899,
+        images: ["https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?q=80&w=2070&auto=format&fit=crop"],
+        category: "Tops",
+        stock: 20
+      },
+      {
+        _id: "dummy5",
+        name: "Designer Silk Saree",
+        price: 4999,
+        images: ["https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1974&auto=format&fit=crop"],
+        category: "Sarees",
+        stock: 8
+      },
+      {
+        _id: "dummy6",
+        name: "Palazzo Bottoms",
+        price: 699,
+        images: ["https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2020&auto=format&fit=crop"],
+        category: "Bottoms",
+        stock: 25
+      },
+      {
+        _id: "dummy7",
+        name: "Festive Lehenga Choli",
+        price: 5999,
+        images: ["https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=1957&auto=format&fit=crop"],
+        category: "Lehengas",
+        stock: 3
+      },
+      {
+        _id: "dummy8",
+        name: "Floral Maxi Dress",
+        price: 1599,
+        images: ["https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=1946&auto=format&fit=crop"],
+        category: "Dresses",
+        stock: 12
+      }
+    ]
+  }
+
   const categories = [
     { name: "New In", icon: "✨", color: "bg-amber-100" },
     { name: "Kurtas", icon: "👗", color: "bg-pink-100" },
