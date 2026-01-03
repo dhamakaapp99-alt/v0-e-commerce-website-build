@@ -8,23 +8,47 @@ export function useCart() {
   const [cart, setCart] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  // Load cart from localStorage on mount
   useEffect(() => {
-    const savedCart = localStorage.getItem(CART_KEY)
-    if (savedCart) {
-      try {
-        setCart(JSON.parse(savedCart))
-      } catch (error) {
-        console.error("Error loading cart:", error)
+    const loadCart = () => {
+      const savedCart = localStorage.getItem(CART_KEY)
+      if (savedCart) {
+        try {
+          setCart(JSON.parse(savedCart))
+        } catch (error) {
+          console.error("Error loading cart:", error)
+        }
+      }
+      setIsLoading(false)
+    }
+
+    loadCart()
+
+    const handleStorageChange = (e) => {
+      if (e.key === CART_KEY) {
+        loadCart()
       }
     }
-    setIsLoading(false)
+
+    const handleCartEvent = (e) => {
+      if (e.detail) {
+        setCart(e.detail)
+      }
+    }
+
+    window.addEventListener("storage", handleStorageChange)
+    window.addEventListener("cartChanged", handleCartEvent)
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange)
+      window.removeEventListener("cartChanged", handleCartEvent)
+    }
   }, [])
 
-  // Save cart to localStorage whenever it changes
   const updateCart = useCallback((newCart) => {
     setCart(newCart)
     localStorage.setItem(CART_KEY, JSON.stringify(newCart))
+    // Dispatch event to update all components listening to cart changes
+    window.dispatchEvent(new CustomEvent("cartChanged", { detail: newCart }))
   }, [])
 
   const addToCart = useCallback(
@@ -43,14 +67,14 @@ export function useCart() {
       }
 
       updateCart(updatedCart)
-      window.dispatchEvent(new CustomEvent("cartChanged", { detail: updatedCart }))
     },
     [cart, updateCart],
   )
 
   const removeFromCart = useCallback(
     (itemId, size, color) => {
-      updateCart(cart.filter((i) => !(i.id === itemId && i.size === size && i.color === color)))
+      const updatedCart = cart.filter((i) => !(i.id === itemId && i.size === size && i.color === color))
+      updateCart(updatedCart)
     },
     [cart, updateCart],
   )
@@ -60,7 +84,10 @@ export function useCart() {
       if (quantity <= 0) {
         removeFromCart(itemId, size, color)
       } else {
-        updateCart(cart.map((i) => (i.id === itemId && i.size === size && i.color === color ? { ...i, quantity } : i)))
+        const updatedCart = cart.map((i) =>
+          i.id === itemId && i.size === size && i.color === color ? { ...i, quantity } : i,
+        )
+        updateCart(updatedCart)
       }
     },
     [cart, updateCart, removeFromCart],
