@@ -6,10 +6,17 @@ import Footer from "@/components/footer"
 import { ChevronRight, ShoppingBag, Heart, Zap, Star, TrendingUp, Sparkles } from "lucide-react"
 
 export default async function Home() {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/api/products?limit=8`, {
-    cache: "no-store",
-  })
-  const data = await response.json()
+  let data = { success: false, products: [] }
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/api/products?limit=8`, {
+      cache: "no-store",
+    })
+    if (response.ok) {
+      data = await response.json()
+    }
+  } catch (error) {
+    console.error("Failed to fetch products:", error)
+  }
 
   return (
     <>
