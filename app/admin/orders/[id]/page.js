@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { use, useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
 export default function OrderDetail({ params }) {
+  const { id } = use(params)
   const router = useRouter()
   const [order, setOrder] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -14,11 +15,11 @@ export default function OrderDetail({ params }) {
 
   useEffect(() => {
     fetchOrder()
-  }, [params.id])
+  }, [id])
 
   const fetchOrder = async () => {
     try {
-      const response = await fetch(`/api/admin/orders/${params.id}`)
+      const response = await fetch(`/api/admin/orders/${id}`)
       const data = await response.json()
       if (data.success) {
         setOrder(data.order)
@@ -33,7 +34,7 @@ export default function OrderDetail({ params }) {
   const updateOrderStatus = async (newStatus) => {
     setUpdatingStatus(true)
     try {
-      const response = await fetch(`/api/admin/orders/${params.id}`, {
+      const response = await fetch(`/api/admin/orders/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

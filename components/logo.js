@@ -1,18 +1,25 @@
 export default function Logo({ variant = "full" }) {
   if (variant === "icon") {
     return (
-      <div className="flex flex-col items-center gap-1">
-        <div className="text-2xl font-bold tracking-widest text-gray-900">MAYRA</div>
-        <div className="text-xs italic text-gray-700 tracking-wide">collection</div>
+      <div className="flex flex-col items-center leading-none select-none">
+        <span className="text-[17px] font-medium tracking-[0.5em] text-[#111]">
+          MAYRA
+        </span>
+        <span className="mt-0.5 text-[8px] font-light tracking-[0.45em] text-[#777] uppercase">
+          collection
+        </span>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col items-center gap-0.5">
-      <div className="text-xs tracking-widest text-gray-600 font-medium">EST. 2023</div>
-      <div className="text-3xl font-bold tracking-widest text-gray-900 leading-tight">MAYRA</div>
-      <div className="text-sm italic font-light text-gray-700 tracking-wider">collection</div>
+    <div className="flex flex-col items-center leading-none select-none">
+      <span className="text-[30px] md:text-[34px] font-medium tracking-[0.6em] text-[#111]">
+        MAYRA
+      </span>
+      <span className="mt-1 text-[10px] font-light tracking-[0.45em] text-[#777] uppercase">
+        collection
+      </span>
     </div>
   )
 }
