@@ -86,7 +86,7 @@ export default async function Home() {
                     className={`${cat.color} rounded-full aspect-square flex items-center justify-center hover:shadow-lg transition-all cursor-pointer`}
                   >
                     <div className="text-center">
-                      <div className="text-4xl mb-1">{cat.icon}</div>
+                      <div className="text-2xl mb-1">{cat.icon}</div>
                       <p className="text-xs font-semibold text-gray-900">{cat.name}</p>
                     </div>
                   </div>
