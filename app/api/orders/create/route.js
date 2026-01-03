@@ -1,8 +1,6 @@
 import { getDatabase } from "@/lib/mongodb"
+import { createRazorpayOrder } from "@/lib/razorpay"
 import { ObjectId } from "mongodb"
-import Razorpay from "razorpay"
-
-export const dynamic = 'force-dynamic'
 
 export async function POST(request) {
   try {
@@ -15,16 +13,7 @@ export async function POST(request) {
 
     // Create Razorpay order
     const orderId = new ObjectId().toString()
-    
-    const razorpay = new Razorpay({
-      key_id: process.env.RAZORPAY_KEY_ID,
-      key_secret: process.env.RAZORPAY_KEY_SECRET,
-    })
-    const razorpayOrder = await razorpay.orders.create({
-      amount: Math.round(totalAmount * 100),
-      currency: "INR",
-      receipt: orderId,
-    })
+    const razorpayOrder = await createRazorpayOrder(totalAmount, orderId)
 
     // Create order in database with pending status
     const orderData = {
