@@ -72,7 +72,7 @@ export default async function Home() {
             </div>
 
             {/* Category Icons Grid */}
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
               {[
                 { name: "New In", icon: "✨", color: "bg-yellow-100" },
                 { name: "Kurtas", icon: "👗", color: "bg-pink-100" },
@@ -86,8 +86,8 @@ export default async function Home() {
                     className={`${cat.color} rounded-full aspect-square flex items-center justify-center hover:shadow-lg transition-all cursor-pointer`}
                   >
                     <div className="text-center">
-                      <div className="text-2xl mb-1">{cat.icon}</div>
-                      <p className="text-xs font-semibold text-gray-900">{cat.name}</p>
+                      <div className="text-xl mb-1">{cat.icon}</div>
+                      <p className="text-xs font-semibold text-gray-900 leading-tight">{cat.name}</p>
                     </div>
                   </div>
                 </Link>
