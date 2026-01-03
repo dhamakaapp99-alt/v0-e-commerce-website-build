@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image"
 import { Heart, ShoppingCart, Eye } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useCart } from "@/hooks/use-cart"
 
@@ -9,8 +9,31 @@ export default function ProductCard({ product }) {
   const router = useRouter()
   const [isWishlisted, setIsWishlisted] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
-  const [showAddedAnimation, setShowAddedAnimation] = useState(false)
+  const [isInCart, setIsInCart] = useState(false)
   const { addToCart } = useCart()
+
+  useEffect(() => {
+    const checkIfInCart = () => {
+      const cart = localStorage.getItem("mayra_cart")
+      if (cart) {
+        const items = JSON.parse(cart)
+        const found = items.some(
+          (i) =>
+            i.id === product._id && i.size === (product.sizes?.[0] || "") && i.color === (product.colors?.[0] || ""),
+        )
+        setIsInCart(found)
+      }
+    }
+
+    checkIfInCart()
+
+    const handleCartChange = () => {
+      checkIfInCart()
+    }
+
+    window.addEventListener("cartChanged", handleCartChange)
+    return () => window.removeEventListener("cartChanged", handleCartChange)
+  }, [product._id, product.sizes, product.colors])
 
   const handleQuickAddToCart = (e) => {
     e.preventDefault()
@@ -27,8 +50,7 @@ export default function ProductCard({ product }) {
         quantity: 1,
       })
 
-      setShowAddedAnimation(true)
-      setTimeout(() => setShowAddedAnimation(false), 1500)
+      setIsInCart(true)
     }
   }
 
@@ -108,12 +130,12 @@ export default function ProductCard({ product }) {
           onClick={handleQuickAddToCart}
           disabled={product.stock === 0}
           className={`w-full mt-3 font-semibold py-2 rounded-lg transition-all flex items-center justify-center gap-2 relative overflow-hidden ${
-            showAddedAnimation
+            isInCart
               ? "bg-green-500 text-white"
               : "bg-teal-600 hover:bg-teal-700 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
           }`}
         >
-          {showAddedAnimation ? (
+          {isInCart ? (
             <>
               <span>✓ Added to Cart</span>
             </>
