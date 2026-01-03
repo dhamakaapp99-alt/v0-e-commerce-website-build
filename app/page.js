@@ -16,19 +16,19 @@ export default async function Home() {
       <Header />
       <main className="min-h-screen bg-white">
         {/* Mobile App-Style Hero */}
-        <section className="bg-gradient-to-br from-teal-50 via-white to-blue-50 pt-6 pb-12">
+        <section className="bg-gradient-to-br from-teal-50 via-white to-blue-50 pt-6 pb-4">
           <div className="max-w-6xl mx-auto px-4">
             {/* Welcome Message */}
             <div className="mb-8">
-              <div className="flex items-center gap-2 mb-4">
+              {/* <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="text-teal-600" size={28} />
-              </div>
+              </div> */}
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">Mayra Collection</h1>
               <p className="text-gray-600 text-lg">Trendy & Elegant Fashion</p>
             </div>
 
             {/* Quick Action Buttons */}
-            <div className="grid grid-cols-3 gap-3 mb-8">
+            {/* <div className="grid grid-cols-3 gap-3 mb-8">
               <Link href="/shop">
                 <div className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-teal-300 hover:shadow-md transition-all cursor-pointer">
                   <ShoppingBag size={24} className="text-teal-600 mx-auto mb-2" />
@@ -43,10 +43,10 @@ export default async function Home() {
                 <Zap size={24} className="text-yellow-500 mx-auto mb-2" />
                 <p className="text-xs font-semibold text-gray-900">Deals</p>
               </div>
-            </div>
+            </div> */}
 
             {/* Featured Banner */}
-            <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-2xl p-6 text-white mb-8">
+             <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-2xl p-6 text-white">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold opacity-90">Limited Offer</p>
@@ -56,10 +56,11 @@ export default async function Home() {
                 <TrendingUp size={48} className="opacity-20" />
               </div>
             </div>
+           
           </div>
         </section>
 
-        <section className="py-8 border-b border-gray-100">
+        <section className="py-0 border-b border-gray-100">
           <div className="max-w-6xl mx-auto px-4">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Categories</h2>
@@ -83,7 +84,7 @@ export default async function Home() {
               ].map((cat) => (
                 <Link key={cat.name} href="/shop">
                   <div
-                    className={`${cat.color} rounded-full aspect-square flex items-center justify-center hover:shadow-lg transition-all cursor-pointer`}
+                    className={`${cat.color} w-20 h-20 mx-auto rounded-full flex items-center justify-center hover:shadow-lg transition-all cursor-pointer`}
                   >
                     <div className="text-center">
                       <div className="text-xl mb-1">{cat.icon}</div>
@@ -95,6 +96,8 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
+        
 
         {/* Featured Products Section */}
         <section className="py-8">
