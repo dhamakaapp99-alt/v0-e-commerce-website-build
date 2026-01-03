@@ -44,19 +44,29 @@ export default function ProductCard({ product }) {
     e.preventDefault()
     e.stopPropagation()
 
-    addToCart({
-      id: product._id,
-      name: product.name,
-      price: product.price,
-      image: product.images?.[0],
-      size: product.sizes?.[0] || "One Size",
-      color: product.colors?.[0] || "Default",
-      quantity: 1,
-    })
+    if (isInCart) {
+      // Remove from cart
+      const cart = JSON.parse(localStorage.getItem("mayra_cart") || "[]")
+      const updatedCart = cart.filter((i) => i.id !== product._id)
+      localStorage.setItem("mayra_cart", JSON.stringify(updatedCart))
+      window.dispatchEvent(new CustomEvent("cartChanged", { detail: updatedCart }))
+      setIsInCart(false)
+    } else {
+      // Add to cart with quantity notification
+      addToCart({
+        id: product._id,
+        name: product.name,
+        price: product.price,
+        image: product.images?.[0],
+        size: product.sizes?.[0] || "One Size",
+        color: product.colors?.[0] || "Default",
+        quantity: 1,
+      })
 
-    setIsInCart(true)
-    setShowAddedNotification(true)
-    setTimeout(() => setShowAddedNotification(false), 2000)
+      setIsInCart(true)
+      setShowAddedNotification(true)
+      setTimeout(() => setShowAddedNotification(false), 1500)
+    }
   }
 
   const handleQuickView = (e) => {
@@ -142,13 +152,13 @@ export default function ProductCard({ product }) {
           disabled={product.stock === 0}
           className={`w-full mt-3 font-semibold py-2 rounded-lg transition-all flex items-center justify-center gap-2 ${
             isInCart
-              ? "bg-green-500 text-white hover:bg-green-600"
+              ? "bg-red-500 text-white hover:bg-red-600"
               : "bg-teal-600 hover:bg-teal-700 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
           }`}
         >
           {isInCart ? (
             <>
-              <span>✓ In Cart</span>
+              <span>✕ Remove from Cart</span>
             </>
           ) : (
             <>

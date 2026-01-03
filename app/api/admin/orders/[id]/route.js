@@ -3,9 +3,10 @@ import { ObjectId } from "mongodb"
 
 export async function GET(request, { params }) {
   try {
+    const { id } = await params
     const db = await getDatabase()
     const order = await db.collection("orders").findOne({
-      _id: new ObjectId(params.id),
+      _id: new ObjectId(id),
     })
 
     if (!order) {
@@ -21,11 +22,12 @@ export async function GET(request, { params }) {
 
 export async function PATCH(request, { params }) {
   try {
+    const { id } = await params
     const db = await getDatabase()
     const { status } = await request.json()
 
     const result = await db.collection("orders").updateOne(
-      { _id: new ObjectId(params.id) },
+      { _id: new ObjectId(id) },
       {
         $set: {
           status,
