@@ -27,7 +27,7 @@ export default function NewProduct() {
   const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"]
   const COLOR_OPTIONS = ["Black", "White", "Blue", "Red", "Green", "Yellow", "Pink", "Gray"]
 
-  const CLOUDINARY_UPLOAD_PRESET = "mayra_collection"
+  const CLOUDINARY_UPLOAD_PRESET = "mayra_collection" // Ensure this exists in Cloudinary as 'Unsigned'
   const CLOUDINARY_CLOUD_NAME = "dewcuqgbd"
 
   const handleInputChange = (e) => {
@@ -58,6 +58,11 @@ export default function NewProduct() {
       })
 
       const data = await response.json()
+
+      if (data.error) {
+        throw new Error(data.error.message)
+      }
+
       if (data.secure_url) {
         const newImages = [...formData.images]
         newImages[index] = data.secure_url
@@ -67,8 +72,8 @@ export default function NewProduct() {
         }))
       }
     } catch (error) {
-      console.error("Error uploading image:", error)
-      alert("Failed to upload image")
+      console.error("Error uploading image:", error.message)
+      alert(`Failed to upload image: ${error.message}`)
     } finally {
       setUploadingImages((prev) => ({
         ...prev,
