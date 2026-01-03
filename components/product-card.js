@@ -1,90 +1,130 @@
 "use client"
-
-import Link from "next/link"
 import Image from "next/image"
-import { Heart, ShoppingCart } from "lucide-react"
+import { Heart, ShoppingCart, Eye } from "lucide-react"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useCart } from "@/hooks/use-cart"
 
 export default function ProductCard({ product }) {
+  const router = useRouter()
   const [isWishlisted, setIsWishlisted] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
+  const [showAddedAnimation, setShowAddedAnimation] = useState(false)
+  const { addToCart } = useCart()
+
+  const handleQuickAddToCart = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (product.stock > 0) {
+      addToCart({
+        id: product._id,
+        name: product.name,
+        price: product.price,
+        image: product.images?.[0],
+        size: product.sizes?.[0] || "",
+        color: product.colors?.[0] || "",
+        quantity: 1,
+      })
+
+      setShowAddedAnimation(true)
+      setTimeout(() => setShowAddedAnimation(false), 1500)
+    }
+  }
+
+  const handleQuickView = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    router.push(`/product/${product._id}`)
+  }
 
   return (
-    <Link href={`/product/${product._id}`}>
-      <div
-        className="group cursor-pointer"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <div className="relative overflow-hidden rounded-lg bg-gray-100 aspect-square mb-4 shadow-sm hover:shadow-md transition-all duration-300">
-          <Image
-            src={product.images?.[0] || "/placeholder.svg?height=300&width=300&query=clothing"}
-            alt={product.name}
-            fill
-            className="object-cover group-hover:scale-110 transition-transform duration-300"
-          />
+    <div
+      className="group cursor-pointer"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="relative overflow-hidden rounded-xl bg-gray-100 aspect-square mb-4 shadow-sm hover:shadow-xl transition-all duration-300">
+        <Image
+          src={product.images?.[0] || "/placeholder.svg?height=300&width=300&query=clothing"}
+          alt={product.name}
+          fill
+          className="object-cover group-hover:scale-110 transition-transform duration-300"
+        />
 
-          {isHovered && (
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center gap-3 transition-opacity">
-              <button
-                onClick={(e) => {
-                  e.preventDefault()
-                  setIsWishlisted(!isWishlisted)
-                }}
-                className="p-3 bg-white rounded-full hover:bg-gray-100 transition-colors"
-              >
-                <Heart size={20} className={isWishlisted ? "fill-red-500 text-red-500" : "text-gray-600"} />
-              </button>
-            </div>
-          )}
-
-          {/* Stock Badge */}
-          {product.stock <= 5 && product.stock > 0 && (
-            <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-              Only {product.stock} left
-            </div>
-          )}
-
-          {product.stock === 0 && (
-            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-              <span className="text-white font-bold text-lg">Out of Stock</span>
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <h3 className="font-semibold text-sm md:text-base line-clamp-2 text-gray-900 group-hover:text-primary transition-colors">
-            {product.name}
-          </h3>
-          <p className="text-muted-foreground text-xs md:text-sm">{product.category}</p>
-
-          {/* Rating */}
-          <div className="flex items-center gap-1 py-1">
-            <div className="flex gap-0.5">
-              {[...Array(5)].map((_, i) => (
-                <span key={i} className="text-yellow-400 text-xs">
-                  ★
-                </span>
-              ))}
-            </div>
-            <span className="text-xs text-gray-600">(32)</span>
+        {isHovered && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center gap-3 transition-opacity">
+            <button
+              onClick={handleQuickView}
+              className="p-3 bg-white rounded-full hover:bg-gray-100 transition-colors shadow-lg"
+              title="Quick View"
+            >
+              <Eye size={20} className="text-teal-600" />
+            </button>
+            <button
+              onClick={() => setIsWishlisted(!isWishlisted)}
+              className="p-3 bg-white rounded-full hover:bg-gray-100 transition-colors shadow-lg"
+              title="Add to Wishlist"
+            >
+              <Heart size={20} className={isWishlisted ? "fill-red-500 text-red-500" : "text-gray-600"} />
+            </button>
           </div>
+        )}
 
-          <p className="font-bold text-lg text-gray-900">₹{product.price.toLocaleString("en-IN")}</p>
+        {/* Stock Badge */}
+        {product.stock <= 5 && product.stock > 0 && (
+          <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+            Only {product.stock} left
+          </div>
+        )}
 
-          {/* Add to Cart Button */}
-          <button
-            onClick={(e) => {
-              e.preventDefault()
-              // This will be handled by the link click
-            }}
-            className="w-full mt-3 bg-primary hover:bg-primary/90 text-white font-semibold py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
-          >
-            <ShoppingCart size={16} />
-            Quick View
-          </button>
-        </div>
+        {product.stock === 0 && (
+          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+            <span className="text-white font-bold text-lg">Out of Stock</span>
+          </div>
+        )}
       </div>
-    </Link>
+
+      <div className="space-y-2">
+        <h3 className="font-semibold text-sm md:text-base line-clamp-2 text-gray-900 group-hover:text-teal-600 transition-colors">
+          {product.name}
+        </h3>
+        <p className="text-muted-foreground text-xs md:text-sm text-gray-600">{product.category}</p>
+
+        <div className="flex items-center gap-1 py-1">
+          <div className="flex gap-0.5">
+            {[...Array(5)].map((_, i) => (
+              <span key={i} className="text-yellow-400 text-xs">
+                ★
+              </span>
+            ))}
+          </div>
+          <span className="text-xs text-gray-600">(32)</span>
+        </div>
+
+        <p className="font-bold text-lg text-gray-900">₹{product.price.toLocaleString("en-IN")}</p>
+
+        <button
+          onClick={handleQuickAddToCart}
+          disabled={product.stock === 0}
+          className={`w-full mt-3 font-semibold py-2 rounded-lg transition-all flex items-center justify-center gap-2 relative overflow-hidden ${
+            showAddedAnimation
+              ? "bg-green-500 text-white"
+              : "bg-teal-600 hover:bg-teal-700 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
+          }`}
+        >
+          {showAddedAnimation ? (
+            <>
+              <span>✓ Added to Cart</span>
+            </>
+          ) : (
+            <>
+              <ShoppingCart size={16} />
+              <span>Add to Cart</span>
+            </>
+          )}
+        </button>
+      </div>
+    </div>
   )
 }

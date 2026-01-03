@@ -4,10 +4,20 @@ import { useState, useEffect } from "react"
 import ProductCard from "@/components/product-card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
+import { Search, X } from "lucide-react"
 import Header from "@/components/header"
+import Footer from "@/components/footer"
 
-const CATEGORIES = ["all", "Shirts", "T-Shirts", "Dresses", "Sarees", "Kurti", "Bottoms", "Accessories"]
+const CATEGORIES = [
+  { id: "all", name: "All Products", icon: "🛍️" },
+  { id: "New In", name: "New In", icon: "✨" },
+  { id: "Kurtas", name: "Kurtas", icon: "👗" },
+  { id: "Suits", name: "Suits", icon: "🎩" },
+  { id: "Dresses", name: "Dresses", icon: "💃" },
+  { id: "T-Shirts", name: "T-Shirts", icon: "👕" },
+  { id: "Sarees", name: "Sarees", icon: "🧵" },
+  { id: "Bottoms", name: "Bottoms", icon: "👖" },
+]
 
 export default function Shop() {
   const [products, setProducts] = useState([])
@@ -48,7 +58,7 @@ export default function Shop() {
     <>
       <Header />
       <div className="min-h-screen bg-background pb-24 md:pb-8">
-        {/* Header */}
+        {/* Sticky Header with Search */}
         <div className="sticky top-20 md:top-20 bg-background border-b z-40 p-4">
           <div className="max-w-7xl mx-auto">
             <h1 className="text-2xl font-bold mb-4">Shop</h1>
@@ -66,21 +76,24 @@ export default function Shop() {
 
         {/* Filters and Products */}
         <div className="max-w-7xl mx-auto px-4 py-8">
-          {/* Categories */}
-          <div className="mb-8 overflow-x-auto pb-4">
-            <div className="flex gap-2 min-w-min">
+          <div className="mb-8 overflow-x-auto pb-4 -mx-4 px-4">
+            <div className="flex gap-3 min-w-min">
               {CATEGORIES.map((category) => (
-                <Button
-                  key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
+                <button
+                  key={category.id}
                   onClick={() => {
-                    setSelectedCategory(category)
+                    setSelectedCategory(category.id)
                     setCurrentPage(1)
                   }}
-                  className="whitespace-nowrap"
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap font-medium transition-all ${
+                    selectedCategory === category.id
+                      ? "bg-teal-600 text-white shadow-lg"
+                      : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                  }`}
                 >
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </Button>
+                  <span className="text-lg">{category.icon}</span>
+                  {category.name}
+                </button>
               ))}
             </div>
           </div>
@@ -88,7 +101,10 @@ export default function Shop() {
           {/* Products Grid */}
           {loading ? (
             <div className="flex justify-center py-12">
-              <p className="text-muted-foreground">Loading products...</p>
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
+                <p className="text-muted-foreground">Loading products...</p>
+              </div>
             </div>
           ) : filteredProducts.length > 0 ? (
             <>
@@ -124,10 +140,20 @@ export default function Shop() {
           ) : (
             <div className="text-center py-12">
               <p className="text-muted-foreground">No products found.</p>
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="mt-4 text-teal-600 hover:text-teal-700 font-medium flex items-center justify-center gap-2"
+                >
+                  <X size={16} />
+                  Clear search
+                </button>
+              )}
             </div>
           )}
         </div>
       </div>
+      <Footer />
     </>
   )
 }

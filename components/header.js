@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ShoppingCart, Menu, Search, X, User, LogOut } from "lucide-react"
+import { ShoppingCart, Menu, Search, X, User, LogOut, MessageCircle } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
@@ -10,22 +10,43 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [user, setUser] = useState(null)
   const [cartCount, setCartCount] = useState(0)
+  const [cartUpdate, setCartUpdate] = useState(0)
   const router = useRouter()
 
   useEffect(() => {
-    // Check if user is logged in
     const userData = localStorage.getItem("user")
     const isLoggedIn = localStorage.getItem("isLoggedIn")
     if (isLoggedIn && userData) {
       setUser(JSON.parse(userData))
     }
 
-    // Get cart count
-    const cart = localStorage.getItem("cart")
-    if (cart) {
-      const items = JSON.parse(cart)
-      setCartCount(items.length)
+    const updateCartCount = () => {
+      const cart = localStorage.getItem("mayra_cart")
+      if (cart) {
+        const items = JSON.parse(cart)
+        setCartCount(items.length)
+      } else {
+        setCartCount(0)
+      }
     }
+
+    updateCartCount()
+
+    // Listen for storage changes (from other tabs)
+    window.addEventListener("storage", updateCartCount)
+
+    // Custom event for cart updates from same tab
+    window.addEventListener("cartUpdated", updateCartCount)
+
+    return () => {
+      window.removeEventListener("storage", updateCartCount)
+      window.removeEventListener("cartUpdated", updateCartCount)
+    }
+  }, [cartUpdate])
+
+  // Trigger update when component mounts
+  useEffect(() => {
+    setCartUpdate((prev) => prev + 1)
   }, [])
 
   const handleLogout = () => {
@@ -42,11 +63,11 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-12 h-12 relative">
+            <div className="w-10 h-10 relative">
               <img src="/mayra-logo.png" alt="Mayra Collection" className="w-full h-full object-contain" />
             </div>
             <div className="hidden sm:block">
-              <div className="text-lg font-bold text-gray-900">Mayra Collection</div>
+              <div className="text-base font-bold text-gray-900">Mayra Collection</div>
               <div className="text-xs text-gray-600">Trendy Elegant</div>
             </div>
           </Link>
@@ -69,14 +90,24 @@ export default function Header() {
             <button className="p-2 hover:bg-gray-100 rounded-lg transition hidden sm:flex">
               <Search className="w-5 h-5" />
             </button>
-            <Link href="/cart" className="p-2 hover:bg-gray-100 rounded-lg transition relative">
+            <Link href="/cart" className="p-2 hover:bg-gray-100 rounded-lg transition relative group">
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-teal-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold animate-pulse">
                   {cartCount}
                 </span>
               )}
             </Link>
+
+            <a
+              href="https://wa.me/919636509015"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 hover:bg-green-100 rounded-lg transition hidden sm:flex text-green-600"
+              title="Contact on WhatsApp"
+            >
+              <MessageCircle className="w-5 h-5" />
+            </a>
 
             {user ? (
               <div className="hidden sm:flex items-center gap-3">
@@ -124,6 +155,16 @@ export default function Header() {
             <Link href="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
               Contact
             </Link>
+
+            <a
+              href="https://wa.me/919636509015"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block px-4 py-2 text-green-600 hover:bg-green-50 rounded font-medium"
+            >
+              <MessageCircle size={18} className="inline mr-2" />
+              WhatsApp Us
+            </a>
 
             {user ? (
               <>

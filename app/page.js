@@ -2,344 +2,156 @@ import ProductCard from "@/components/product-card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Header from "@/components/header"
-import { ChevronRight, ShoppingBag, Heart, Zap, Star, TrendingUp, MapPin, Store, Search, Sparkles, ArrowRight } from "lucide-react"
-import { getDatabase } from "@/lib/mongodb"
+import Footer from "@/components/footer"
+import { ChevronRight, ShoppingBag, Heart, Zap, Star, TrendingUp, Sparkles } from "lucide-react"
 
 export default async function Home() {
-  let products = []
-  try {
-    const db = await getDatabase()
-    const productsRaw = await db.collection("products").find({}).sort({ _id: -1 }).limit(8).toArray()
-    products = productsRaw.map((product) => ({
-      ...product,
-      _id: product._id.toString(),
-    }))
-  } catch (error) {
-    console.error("Error fetching products:", error)
-  }
-
-  // Fallback to dummy products if database is empty or connection fails
-  if (products.length === 0) {
-    products = [
-      {
-        _id: "dummy1",
-        name: "Embroidered Anarkali Kurta",
-        price: 2499,
-        images: ["https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=2070&auto=format&fit=crop"],
-        category: "Kurtas",
-        stock: 10
-      },
-      {
-        _id: "dummy2",
-        name: "Cotton Printed Suit Set",
-        price: 1899,
-        images: ["https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?q=80&w=1934&auto=format&fit=crop"],
-        category: "Suits",
-        stock: 15
-      },
-      {
-        _id: "dummy3",
-        name: "Georgette Party Wear Gown",
-        price: 3599,
-        images: ["https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1983&auto=format&fit=crop"],
-        category: "Dresses",
-        stock: 5
-      },
-      {
-        _id: "dummy4",
-        name: "Casual Rayon Top",
-        price: 899,
-        images: ["https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?q=80&w=2070&auto=format&fit=crop"],
-        category: "Tops",
-        stock: 20
-      },
-      {
-        _id: "dummy5",
-        name: "Designer Silk Saree",
-        price: 4999,
-        images: ["https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1974&auto=format&fit=crop"],
-        category: "Sarees",
-        stock: 8
-      },
-      {
-        _id: "dummy6",
-        name: "Palazzo Bottoms",
-        price: 699,
-        images: ["https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2020&auto=format&fit=crop"],
-        category: "Bottoms",
-        stock: 25
-      },
-      {
-        _id: "dummy7",
-        name: "Festive Lehenga Choli",
-        price: 5999,
-        images: ["https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=1957&auto=format&fit=crop"],
-        category: "Lehengas",
-        stock: 3
-      },
-      {
-        _id: "dummy8",
-        name: "Floral Maxi Dress",
-        price: 1599,
-        images: ["https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=1946&auto=format&fit=crop"],
-        category: "Dresses",
-        stock: 12
-      }
-    ]
-  }
-
-  const categories = [
-    { name: "New In", icon: "✨", color: "bg-amber-100" },
-    { name: "Kurtas", icon: "👗", color: "bg-pink-100" },
-    { name: "Suits", icon: "👘", color: "bg-purple-100" },
-    { name: "Dresses", icon: "💃", color: "bg-rose-100" },
-    { name: "Tops", icon: "👚", color: "bg-blue-100" },
-    { name: "Bottoms", icon: "👖", color: "bg-green-100" },
-  ]
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/api/products?limit=8`, {
+    cache: "no-store",
+  })
+  const data = await response.json()
 
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gray-50 pb-24">
+      <main className="min-h-screen bg-white">
         {/* Mobile App-Style Hero */}
-        <section className="bg-white rounded-b-[2.5rem] shadow-sm pt-6 pb-10 mb-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-teal-50 rounded-full -mr-32 -mt-32 opacity-50 pointer-events-none"></div>
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-pink-50 rounded-full -ml-24 -mb-24 opacity-50 pointer-events-none"></div>
-          
+        <section className="bg-gradient-to-br from-teal-50 via-white to-blue-50 pt-6 pb-12">
           <div className="max-w-6xl mx-auto px-4">
             {/* Welcome Message */}
-            <div className="mb-6 relative z-10">
-              <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-1 tracking-tight">Mayra Collection</h1>
-              <p className="text-sm text-gray-500 font-medium">Discover your unique style</p>
-            </div>
-
-            {/* Search Bar Simulation */}
-            <div className="relative mb-8 shadow-sm">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="text-teal-600" size={28} />
               </div>
-              <input
-                type="text"
-                className="block w-full pl-10 pr-3 py-3 border-none rounded-xl bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-shadow"
-                placeholder="Search for kurtas, tops..."
-                readOnly
-              />
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">Mayra Collection</h1>
+              <p className="text-gray-600 text-lg">Trendy & Elegant Fashion</p>
             </div>
 
             {/* Quick Action Buttons */}
-            <div className="grid grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-3 gap-3 mb-8">
               <Link href="/shop">
-                <div className="bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)] rounded-2xl p-4 text-center hover:shadow-md transition-all cursor-pointer border border-gray-100">
-                  <div className="bg-teal-50 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <ShoppingBag size={20} className="text-teal-600" />
-                  </div>
-                  <p className="text-xs font-bold text-gray-800">Shop All</p>
+                <div className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-teal-300 hover:shadow-md transition-all cursor-pointer">
+                  <ShoppingBag size={24} className="text-teal-600 mx-auto mb-2" />
+                  <p className="text-xs font-semibold text-gray-900">Shop</p>
                 </div>
               </Link>
-              <div className="bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)] rounded-2xl p-4 text-center hover:shadow-md transition-all cursor-pointer border border-gray-100">
-                <div className="bg-red-50 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <Heart size={20} className="text-red-500" />
-                </div>
-                <p className="text-xs font-bold text-gray-800">Wishlist</p>
+              <div className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-red-300 hover:shadow-md transition-all cursor-pointer">
+                <Heart size={24} className="text-red-500 mx-auto mb-2" />
+                <p className="text-xs font-semibold text-gray-900">Wishlist</p>
               </div>
-              <div className="bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)] rounded-2xl p-4 text-center hover:shadow-md transition-all cursor-pointer border border-gray-100">
-                <div className="bg-yellow-50 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <Zap size={20} className="text-yellow-500" />
-                </div>
-                <p className="text-xs font-bold text-gray-800">Flash Deals</p>
+              <div className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-yellow-300 hover:shadow-md transition-all cursor-pointer">
+                <Zap size={24} className="text-yellow-500 mx-auto mb-2" />
+                <p className="text-xs font-semibold text-gray-900">Deals</p>
               </div>
             </div>
 
             {/* Featured Banner */}
-            <div className="bg-gradient-to-r from-teal-600 to-teal-800 rounded-2xl p-6 text-white shadow-xl shadow-teal-200/50 relative overflow-hidden">
-              <div className="absolute right-0 top-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-10 -mt-10"></div>
+            <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-2xl p-6 text-white mb-8">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-bold inline-block mb-2">LIMITED TIME</div>
-                  <h2 className="text-2xl font-bold mb-1">Summer Sale</h2>
-                  <p className="text-sm opacity-90 mb-3">Up to 50% OFF on Kurtas</p>
-                  <button className="bg-white text-teal-700 text-xs font-bold px-4 py-2 rounded-full">Shop Now</button>
+                  <p className="text-sm font-semibold opacity-90">Limited Offer</p>
+                  <h2 className="text-2xl font-bold">Up to 50% OFF</h2>
+                  <p className="text-sm opacity-75 mt-1">On selected items</p>
                 </div>
-                <Sparkles size={48} className="text-yellow-300 opacity-80" />
+                <TrendingUp size={48} className="opacity-20" />
               </div>
             </div>
           </div>
         </section>
 
-        {/* Categories Section */}
-        <section className="mb-8">
+        <section className="py-8 border-b border-gray-100">
           <div className="max-w-6xl mx-auto px-4">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold text-gray-900">Categories</h2>
-              <Link href="/shop" className="text-teal-600 text-xs font-semibold">View All</Link>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Categories</h2>
+              <Link href="/shop">
+                <Button variant="ghost" className="text-teal-600 hover:bg-teal-50">
+                  View All
+                  <ChevronRight size={18} />
+                </Button>
+              </Link>
             </div>
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-              {categories.map((cat, idx) => (
-                <div key={idx} className="flex flex-col items-center min-w-[70px]">
-                  <div className={`${cat.color} w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-sm mb-2 border-2 border-white`}>
-                    {cat.icon}
+
+            {/* Category Icons Grid */}
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+              {[
+                { name: "New In", icon: "✨", color: "bg-yellow-100" },
+                { name: "Kurtas", icon: "👗", color: "bg-pink-100" },
+                { name: "Suits", icon: "🎩", color: "bg-blue-100" },
+                { name: "Dresses", icon: "💃", color: "bg-orange-100" },
+                { name: "Tops", icon: "👕", color: "bg-red-100" },
+                { name: "Bottoms", icon: "👖", color: "bg-green-100" },
+              ].map((cat) => (
+                <Link key={cat.name} href="/shop">
+                  <div
+                    className={`${cat.color} rounded-full aspect-square flex items-center justify-center hover:shadow-lg transition-all cursor-pointer`}
+                  >
+                    <div className="text-center">
+                      <div className="text-4xl mb-1">{cat.icon}</div>
+                      <p className="text-xs font-semibold text-gray-900">{cat.name}</p>
+                    </div>
                   </div>
-                  <span className="text-xs font-medium text-gray-700">{cat.name}</span>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
         </section>
 
         {/* Featured Products Section */}
-        <section className="py-6">
+        <section className="py-8">
           <div className="max-w-6xl mx-auto px-4">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  Trending Now <TrendingUp size={18} className="text-red-500" />
-                </h2>
-                <p className="text-xs text-gray-500 mt-1">Bestsellers this week</p>
+                <h2 className="text-2xl font-bold text-gray-900">Trending Now</h2>
+                <p className="text-sm text-gray-600 mt-1">Bestsellers this week</p>
               </div>
               <Link href="/shop">
-                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                  <ChevronRight size={18} className="text-gray-600" />
-                </div>
+                <Button variant="ghost" className="text-teal-600 hover:bg-teal-50">
+                  See All
+                  <ChevronRight size={18} />
+                </Button>
               </Link>
             </div>
 
-            {products.length > 0 ? (
+            {data.success && data.products.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {products.slice(0, 4).map((product) => (
+                {data.products.map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-500 text-sm">Loading amazing products...</p>
+                <p className="text-gray-600">No products available yet.</p>
               </div>
             )}
           </div>
         </section>
 
-        {/* Secondary Banner */}
-        <section className="py-4 px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-gray-900 rounded-2xl p-6 text-white relative overflow-hidden">
-              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-40"></div>
-              <div className="relative z-10 flex flex-col items-start">
-                <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded mb-2">NEW ARRIVAL</span>
-                <h3 className="text-2xl font-bold mb-2">Elegant Ethnic Wear</h3>
-                <p className="text-gray-200 text-xs mb-4 max-w-[200px]">Discover our latest collection of handcrafted suits and sarees.</p>
-                <Link href="/shop">
-                  <Button size="sm" className="bg-white text-black hover:bg-gray-100 rounded-full text-xs font-bold">
-                    Explore Collection
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* More Products Section */}
-        {products.length > 4 && (
-          <section className="py-6">
-            <div className="max-w-6xl mx-auto px-4">
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900">Fresh Arrivals</h2>
-                  <p className="text-xs text-gray-500 mt-1">Just added to the store</p>
-                </div>
-                <Link href="/shop">
-                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    <ArrowRight size={18} className="text-gray-600" />
-                  </div>
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {products.slice(4, 8).map((product) => (
-                  <ProductCard key={product._id} product={product} />
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Store Locations Section */}
-        <section className="py-8 bg-white mt-4">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-bold text-gray-900">Our Offline Stores</h2>
-                <p className="text-xs text-gray-500 mt-1">Visit us for a premium experience</p>
-              </div>
-              <div className="bg-teal-50 p-2.5 rounded-full">
-                <Store className="text-teal-600" size={20} />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Tijara Store */}
-              <div className="group relative h-64 w-full rounded-3xl overflow-hidden shadow-lg">
-                <img
-                  src="https://content.jdmagicbox.com/v2/comp/alwar/a9/9999px144.x144.250508103106.g4a9/catalogue/mayra-collection-maharana-mohalla-alwar-readymade-garment-retailers-oznu24yje6-250.jpg"
-                  alt="Tijara Store"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-6">
-                  <div className="transform transition-transform duration-300 translate-y-2 group-hover:translate-y-0">
-                    <h3 className="text-white text-2xl font-bold mb-1">Tijara Branch</h3>
-                    <p className="text-gray-300 text-sm flex items-center gap-2 mb-3"><MapPin size={14} className="text-teal-400" /> Main Market, Tijara</p>
-                    <button className="bg-white/20 backdrop-blur-md text-white text-xs font-semibold px-4 py-2 rounded-full border border-white/30 hover:bg-white hover:text-black transition-colors">
-                      Get Directions
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Nuh Store */}
-              <div className="group relative h-64 w-full rounded-3xl overflow-hidden shadow-lg">
-                <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDgrWlfZXUcfuu5uKnFs0U0gK9zWzQv5FkOA&s"
-                  alt="Nuh Store"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-6">
-                  <div className="transform transition-transform duration-300 translate-y-2 group-hover:translate-y-0">
-                    <h3 className="text-white text-2xl font-bold mb-1">Nuh Branch</h3>
-                    <p className="text-gray-300 text-sm flex items-center gap-2 mb-3"><MapPin size={14} className="text-teal-400" /> City Center, Nuh</p>
-                    <button className="bg-white/20 backdrop-blur-md text-white text-xs font-semibold px-4 py-2 rounded-full border border-white/30 hover:bg-white hover:text-black transition-colors">
-                      Get Directions
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Why Shop With Us */}
-        <section className="py-10 bg-gray-50">
+        <section className="py-12 bg-gray-50">
           <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">Why Choose Mayra?</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">Why Shop With Us</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
-                <div className="w-14 h-14 bg-teal-50 rounded-full flex items-center justify-center mb-4">
+              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all">
+                <div className="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-4">
                   <Zap size={24} className="text-teal-600" />
                 </div>
                 <h3 className="font-bold text-gray-900 mb-2">Fast Delivery</h3>
                 <p className="text-sm text-gray-600">
-                  Lightning fast shipping on all orders. Get your favorites in no time.
+                  Free shipping on orders over ₹500. Quick delivery to your doorstep.
                 </p>
               </div>
 
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
-                <div className="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                   <Star size={24} className="text-blue-600" />
                 </div>
                 <h3 className="font-bold text-gray-900 mb-2">Premium Quality</h3>
                 <p className="text-sm text-gray-600">100% authentic products. Handpicked collections for you.</p>
               </div>
 
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
-                <div className="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mb-4">
+              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                   <Heart size={24} className="text-green-600" />
                 </div>
                 <h3 className="font-bold text-gray-900 mb-2">Customer Care</h3>
@@ -350,18 +162,19 @@ export default async function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-12 bg-white rounded-t-[2.5rem] shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+        <section className="py-12 bg-white">
           <div className="max-w-6xl mx-auto px-4 text-center">
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-3">Ready to Upgrade Your Style?</h2>
-            <p className="text-gray-500 mb-8 max-w-md mx-auto">Join thousands of happy customers who trust Mayra Collection for their fashion needs.</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to Explore?</h2>
+            <p className="text-gray-600 mb-8">Discover the latest fashion trends and exclusive offers</p>
             <Link href="/shop">
-              <Button className="bg-gray-900 hover:bg-black text-white font-bold px-10 py-6 rounded-full text-lg shadow-lg hover:shadow-xl transition-all">
+              <Button className="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-8 py-3 rounded-lg">
                 Start Shopping Now
               </Button>
             </Link>
           </div>
         </section>
       </main>
+      <Footer />
     </>
   )
 }
