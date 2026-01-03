@@ -10,7 +10,6 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [user, setUser] = useState(null)
   const [cartCount, setCartCount] = useState(0)
-  const [cartUpdate, setCartUpdate] = useState(0)
   const router = useRouter()
 
   useEffect(() => {
@@ -32,21 +31,19 @@ export default function Header() {
 
     updateCartCount()
 
-    // Listen for storage changes (from other tabs)
-    window.addEventListener("storage", updateCartCount)
+    const handleCartChange = (event) => {
+      updateCartCount()
+    }
 
-    // Custom event for cart updates from same tab
+    window.addEventListener("storage", updateCartCount)
     window.addEventListener("cartUpdated", updateCartCount)
+    window.addEventListener("cartChanged", handleCartChange)
 
     return () => {
       window.removeEventListener("storage", updateCartCount)
       window.removeEventListener("cartUpdated", updateCartCount)
+      window.removeEventListener("cartChanged", handleCartChange)
     }
-  }, [cartUpdate])
-
-  // Trigger update when component mounts
-  useEffect(() => {
-    setCartUpdate((prev) => prev + 1)
   }, [])
 
   const handleLogout = () => {
@@ -67,8 +64,8 @@ export default function Header() {
               <img src="/mayra-logo.png" alt="Mayra Collection" className="w-full h-full object-contain" />
             </div>
             <div className="hidden sm:block">
-              <div className="text-base font-bold text-gray-900">Mayra Collection</div>
-              <div className="text-xs text-gray-600">Trendy Elegant</div>
+              <div className="text-lg font-extrabold text-gray-900 leading-tight">Mayra Collection</div>
+              <div className="text-xs text-teal-600 font-semibold leading-tight">Trendy Elegant</div>
             </div>
           </Link>
 

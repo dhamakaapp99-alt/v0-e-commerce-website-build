@@ -31,19 +31,19 @@ export function useCart() {
     (item) => {
       const existingItem = cart.find((i) => i.id === item.id && i.size === item.size && i.color === item.color)
 
+      let updatedCart
       if (existingItem) {
-        // Update quantity if item already in cart
-        updateCart(
-          cart.map((i) =>
-            i.id === item.id && i.size === item.size && i.color === item.color
-              ? { ...i, quantity: i.quantity + item.quantity }
-              : i,
-          ),
+        updatedCart = cart.map((i) =>
+          i.id === item.id && i.size === item.size && i.color === item.color
+            ? { ...i, quantity: i.quantity + item.quantity }
+            : i,
         )
       } else {
-        // Add new item
-        updateCart([...cart, item])
+        updatedCart = [...cart, item]
       }
+
+      updateCart(updatedCart)
+      window.dispatchEvent(new CustomEvent("cartChanged", { detail: updatedCart }))
     },
     [cart, updateCart],
   )
