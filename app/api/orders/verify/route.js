@@ -1,7 +1,6 @@
 export const runtime = "nodejs"
 
 import { getDatabase } from "@/lib/mongodb"
-import { verifyRazorpaySignature } from "@/lib/razorpay"
 import { ObjectId } from "mongodb"
 
 export async function POST(request) {
@@ -10,6 +9,8 @@ export async function POST(request) {
     const { razorpayOrderId, razorpayPaymentId, razorpaySignature, orderId } = await request.json()
 
     // Verify signature
+    // Dynamically import Razorpay to prevent build-time initialization errors
+    const { verifyRazorpaySignature } = await import("@/lib/razorpay")
     const isSignatureValid = verifyRazorpaySignature(razorpayOrderId, razorpayPaymentId, razorpaySignature)
 
     if (!isSignatureValid) {
