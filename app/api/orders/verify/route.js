@@ -1,3 +1,5 @@
+export const runtime = "nodejs"
+
 import { getDatabase } from "@/lib/mongodb"
 import { verifyRazorpaySignature } from "@/lib/razorpay"
 import { ObjectId } from "mongodb"
