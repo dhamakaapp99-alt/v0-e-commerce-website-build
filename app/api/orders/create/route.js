@@ -2,7 +2,6 @@ export const runtime = "nodejs"
 
 import { NextResponse } from "next/server"
 import { getDatabase } from "@/lib/mongodb"
-import { createRazorpayOrder } from "@/lib/razorpay"
 import { ObjectId } from "mongodb"
 
 export async function POST(request) {
@@ -27,6 +26,8 @@ export async function POST(request) {
 
     // Create Razorpay order
     const orderId = new ObjectId().toString()
+    // Dynamically import Razorpay to prevent build-time initialization errors
+    const { createRazorpayOrder } = await import("@/lib/razorpay")
     const razorpayOrder = await createRazorpayOrder(totalAmount, orderId)
 
     const orderData = {
