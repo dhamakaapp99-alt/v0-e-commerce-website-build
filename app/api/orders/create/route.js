@@ -1,3 +1,6 @@
+export const runtime = "nodejs"
+
+import { NextResponse } from "next/server"
 import { getDatabase } from "@/lib/mongodb"
 import { createRazorpayOrder } from "@/lib/razorpay"
 import { ObjectId } from "mongodb"
@@ -5,19 +8,29 @@ import { ObjectId } from "mongodb"
 export async function POST(request) {
   try {
     const db = await getDatabase()
-    const { items, totalAmount, customerEmail, customerPhone, shippingAddress } = await request.json()
+    const body = await request.json()
+
+    const {
+      items,
+      totalAmount,
+      customerEmail,
+      customerPhone,
+      shippingAddress,
+    } = body
 
     if (!items || items.length === 0) {
-      return Response.json({ success: false, error: "Cart is empty" }, { status: 400 })
+      return NextResponse.json(
+        { success: false, error: "Cart is empty" },
+        { status: 400 }
+      )
     }
 
     // Create Razorpay order
     const orderId = new ObjectId().toString()
     const razorpayOrder = await createRazorpayOrder(totalAmount, orderId)
 
-    // Create order in database with pending status
     const orderData = {
-      userId: customerEmail, // Using email as user identifier for now
+      userId: customerEmail,
       items: items.map((item) => ({
         productId: new ObjectId(item.id),
         name: item.name,
@@ -39,15 +52,19 @@ export async function POST(request) {
 
     const result = await db.collection("orders").insertOne(orderData)
 
-    return Response.json({
+    return NextResponse.json({
       success: true,
-      orderId: result.insertedId,
+      orderId: result.insertedId.toString(),
       razorpayOrderId: razorpayOrder.id,
       razorpayKeyId: process.env.RAZORPAY_KEY_ID,
       amount: razorpayOrder.amount,
     })
   } catch (error) {
-    console.error("Error creating order:", error)
-    return Response.json({ success: false, error: error.message }, { status: 500 })
+    console.error("Order create error:", error)
+
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    )
   }
 }
