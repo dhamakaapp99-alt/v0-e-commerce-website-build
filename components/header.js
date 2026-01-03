@@ -5,6 +5,7 @@ import { ShoppingCart, Menu, Search, X, User, LogOut, MessageCircle } from "luci
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
+import Logo from "@/components/logo"
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -59,14 +60,8 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-10 h-10 relative">
-              <img src="/mayra-logo.png" alt="Mayra Collection" className="w-full h-full object-contain" />
-            </div>
-            <div className="hidden sm:block">
-              <div className="text-lg font-extrabold text-gray-900 leading-tight">Mayra Collection</div>
-              <div className="text-xs text-teal-600 font-semibold leading-tight">Trendy Elegant</div>
-            </div>
+          <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Logo variant="icon" />
           </Link>
 
           {/* Navigation */}

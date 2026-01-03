@@ -10,6 +10,7 @@ export default function ProductCard({ product }) {
   const [isWishlisted, setIsWishlisted] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const [isInCart, setIsInCart] = useState(false)
+  const [showAddedNotification, setShowAddedNotification] = useState(false)
   const { addToCart } = useCart()
 
   useEffect(() => {
@@ -17,11 +18,10 @@ export default function ProductCard({ product }) {
       const cart = localStorage.getItem("mayra_cart")
       if (cart) {
         const items = JSON.parse(cart)
-        const found = items.some(
-          (i) =>
-            i.id === product._id && i.size === (product.sizes?.[0] || "") && i.color === (product.colors?.[0] || ""),
-        )
+        const found = items.some((i) => i.id === product._id)
         setIsInCart(found)
+      } else {
+        setIsInCart(false)
       }
     }
 
@@ -32,26 +32,31 @@ export default function ProductCard({ product }) {
     }
 
     window.addEventListener("cartChanged", handleCartChange)
-    return () => window.removeEventListener("cartChanged", handleCartChange)
-  }, [product._id, product.sizes, product.colors])
+    window.addEventListener("storage", handleCartChange)
+
+    return () => {
+      window.removeEventListener("cartChanged", handleCartChange)
+      window.removeEventListener("storage", handleCartChange)
+    }
+  }, [product._id])
 
   const handleQuickAddToCart = (e) => {
     e.preventDefault()
     e.stopPropagation()
 
-    if (product.stock > 0) {
-      addToCart({
-        id: product._id,
-        name: product.name,
-        price: product.price,
-        image: product.images?.[0],
-        size: product.sizes?.[0] || "",
-        color: product.colors?.[0] || "",
-        quantity: 1,
-      })
+    addToCart({
+      id: product._id,
+      name: product.name,
+      price: product.price,
+      image: product.images?.[0],
+      size: product.sizes?.[0] || "One Size",
+      color: product.colors?.[0] || "Default",
+      quantity: 1,
+    })
 
-      setIsInCart(true)
-    }
+    setIsInCart(true)
+    setShowAddedNotification(true)
+    setTimeout(() => setShowAddedNotification(false), 2000)
   }
 
   const handleQuickView = (e) => {
@@ -105,6 +110,12 @@ export default function ProductCard({ product }) {
             <span className="text-white font-bold text-lg">Out of Stock</span>
           </div>
         )}
+
+        {showAddedNotification && (
+          <div className="absolute inset-0 bg-green-500/90 flex items-center justify-center animate-pulse">
+            <span className="text-white font-bold text-lg">Added to Cart</span>
+          </div>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -129,15 +140,15 @@ export default function ProductCard({ product }) {
         <button
           onClick={handleQuickAddToCart}
           disabled={product.stock === 0}
-          className={`w-full mt-3 font-semibold py-2 rounded-lg transition-all flex items-center justify-center gap-2 relative overflow-hidden ${
+          className={`w-full mt-3 font-semibold py-2 rounded-lg transition-all flex items-center justify-center gap-2 ${
             isInCart
-              ? "bg-green-500 text-white"
+              ? "bg-green-500 text-white hover:bg-green-600"
               : "bg-teal-600 hover:bg-teal-700 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
           }`}
         >
           {isInCart ? (
             <>
-              <span>✓ Added to Cart</span>
+              <span>✓ In Cart</span>
             </>
           ) : (
             <>
