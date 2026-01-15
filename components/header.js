@@ -104,7 +104,7 @@ export default function Header() {
             {user ? (
               <div className="hidden sm:flex items-center gap-3">
                 <Link href="/profile">
-                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-teal-600 hover:bg-teal-50">
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2 text-[#00786f] hover:bg-[#00786f]/10">
                     <User size={18} />
                     <span className="text-sm font-medium">{user.name?.split(" ")[0]}</span>
                   </Button>
@@ -118,7 +118,7 @@ export default function Header() {
                   </Button>
                 </Link>
                 <Link href="/signup">
-                  <Button size="sm" className="bg-teal-600 hover:bg-teal-700 text-white">
+                  <Button size="sm" className="bg-[#00786f] hover:bg-[#006059] text-white">
                     Sign Up
                   </Button>
                 </Link>
@@ -175,12 +175,12 @@ export default function Header() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="outline" className="w-full mt-2 text-teal-600 border-teal-600 bg-transparent">
+                  <Button variant="outline" className="w-full mt-2 text-[#00786f] border-[#00786f] bg-transparent">
                     Sign In
                   </Button>
                 </Link>
                 <Link href="/signup">
-                  <Button className="w-full mt-2 bg-teal-600 hover:bg-teal-700 text-white">Sign Up</Button>
+                  <Button className="w-full mt-2 bg-[#00786f] hover:bg-[#006059] text-white">Sign Up</Button>
                 </Link>
               </>
             )}

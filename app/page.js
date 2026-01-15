@@ -3,7 +3,9 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-import { ChevronRight, ShoppingBag, Heart, Zap, Star, TrendingUp, Sparkles } from "lucide-react"
+import { ChevronRight, ShoppingBag, Heart, Zap, Star, TrendingUp, Sparkles, ArrowRight, Crown, Tag } from "lucide-react"
+import Image from "next/image"
+import HeroSlider from "@/components/hero-slider"
 
 export default async function Home() {
   let data = { success: false, products: [] }
@@ -25,163 +27,286 @@ export default async function Home() {
     <>
       <Header />
       <main className="min-h-screen bg-white">
-        {/* Mobile App-Style Hero */}
-        <section className="bg-gradient-to-br from-teal-50 via-white to-blue-50 pt-6 pb-4">
-          <div className="max-w-6xl mx-auto px-4">
-            {/* Welcome Message */}
-            <div className="mb-8">
-              {/* <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="text-teal-600" size={28} />
-              </div> */}
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">Mayra Collection</h1>
-              <p className="text-gray-600 text-lg">Trendy & Elegant Fashion</p>
-            </div>
+        {/* Hero Banner Slider Section */}
+        <HeroSlider />
 
-            {/* Quick Action Buttons */}
-            {/* <div className="grid grid-cols-3 gap-3 mb-8">
-              <Link href="/shop">
-                <div className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-teal-300 hover:shadow-md transition-all cursor-pointer">
-                  <ShoppingBag size={24} className="text-teal-600 mx-auto mb-2" />
-                  <p className="text-xs font-semibold text-gray-900">Shop</p>
-                </div>
-              </Link>
-              <div className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-red-300 hover:shadow-md transition-all cursor-pointer">
-                <Heart size={24} className="text-red-500 mx-auto mb-2" />
-                <p className="text-xs font-semibold text-gray-900">Wishlist</p>
+        {/* Stats Bar */}
+        <section className="bg-[#00786f] py-8">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="grid grid-cols-3 gap-2 md:gap-8 text-center text-white">
+              <div>
+                <div className="text-2xl md:text-5xl font-bold mb-2">500+</div>
+                <div className="text-sm md:text-base opacity-90">Products</div>
               </div>
-              <div className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-yellow-300 hover:shadow-md transition-all cursor-pointer">
-                <Zap size={24} className="text-yellow-500 mx-auto mb-2" />
-                <p className="text-xs font-semibold text-gray-900">Deals</p>
+              <div>
+                <div className="text-2xl md:text-5xl font-bold mb-2">10K+</div>
+                <div className="text-sm md:text-base opacity-90">Happy Customers</div>
               </div>
-            </div> */}
-
-            {/* Featured Banner */}
-             <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-2xl p-6 text-white">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold opacity-90">Limited Offer</p>
-                  <h2 className="text-2xl font-bold">Up to 50% OFF</h2>
-                  <p className="text-sm opacity-75 mt-1">On selected items</p>
-                </div>
-                <TrendingUp size={48} className="opacity-20" />
+              <div>
+                <div className="text-2xl md:text-5xl font-bold mb-2">4.8★</div>
+                <div className="text-sm md:text-base opacity-90">Rating</div>
               </div>
             </div>
-           
           </div>
         </section>
 
-        <section className="py-0 border-b border-gray-100">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Categories</h2>
-              <Link href="/shop">
-                <Button variant="ghost" className="text-teal-600 hover:bg-teal-50">
-                  View All
-                  <ChevronRight size={18} />
-                </Button>
-              </Link>
+        {/* Quick Categories */}
+        <section className="py-12 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Shop by Category</h2>
+              <p className="text-gray-600">Find exactly what you're looking for</p>
             </div>
-
-            {/* Category Icons Grid */}
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-              {[
-                { name: "New In", icon: "✨", color: "bg-yellow-100" },
-                { name: "Kurtas", icon: "👗", color: "bg-pink-100" },
-                { name: "Suits", icon: "🎩", color: "bg-blue-100" },
-                { name: "Dresses", icon: "💃", color: "bg-orange-100" },
-                { name: "Tops", icon: "👕", color: "bg-red-100" },
-                { name: "Bottoms", icon: "👖", color: "bg-green-100" },
-              ].map((cat) => (
-                <Link key={cat.name} href="/shop">
-                  <div
-                    className={`${cat.color} w-20 h-20 mx-auto rounded-full flex items-center justify-center hover:shadow-lg transition-all cursor-pointer`}
-                  >
-                    <div className="text-center">
-                      <div className="text-xl mb-1">{cat.icon}</div>
-                      <p className="text-xs font-semibold text-gray-900 leading-tight">{cat.name}</p>
-                    </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+              <Link href="/shop?category=new-arrivals">
+                <div className="group bg-white rounded-2xl p-4 md:p-6 text-center hover:shadow-2xl transition-all cursor-pointer border-2 border-transparent hover:border-[#00786f]/30 hover:-translate-y-2">
+                  <div className="w-16 h-16 md:w-20 md:h-20 bg-[#00786f]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all shadow-lg">
+                    <Sparkles className="text-[#00786f]" size={32} />
                   </div>
-                </Link>
-              ))}
+                  <p className="font-bold text-gray-900 text-lg mb-1">New Arrivals</p>
+                  <p className="text-sm text-gray-600">Latest Styles</p>
+                </div>
+              </Link>
+              
+              <Link href="/shop?category=trending">
+                <div className="group bg-white rounded-2xl p-4 md:p-6 text-center hover:shadow-2xl transition-all cursor-pointer border-2 border-transparent hover:border-[#00786f]/30 hover:-translate-y-2">
+                  <div className="w-16 h-16 md:w-20 md:h-20 bg-[#00786f]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all shadow-lg">
+                    <TrendingUp className="text-[#00786f]" size={32} />
+                  </div>
+                  <p className="font-bold text-gray-900 text-lg mb-1">Trending</p>
+                  <p className="text-sm text-gray-600">Most Popular</p>
+                </div>
+              </Link>
+              
+              <Link href="/shop?sale=true">
+                <div className="group bg-white rounded-2xl p-4 md:p-6 text-center hover:shadow-2xl transition-all cursor-pointer border-2 border-transparent hover:border-[#00786f]/30 hover:-translate-y-2">
+                  <div className="w-16 h-16 md:w-20 md:h-20 bg-[#00786f]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all shadow-lg">
+                    <Tag className="text-[#00786f]" size={32} />
+                  </div>
+                  <p className="font-bold text-gray-900 text-lg mb-1">Sale</p>
+                  <p className="text-sm text-gray-600">Up to 50% Off</p>
+                </div>
+              </Link>
+              
+              <Link href="/shop?category=premium">
+                <div className="group bg-white rounded-2xl p-4 md:p-6 text-center hover:shadow-2xl transition-all cursor-pointer border-2 border-transparent hover:border-[#00786f]/30 hover:-translate-y-2">
+                  <div className="w-16 h-16 md:w-20 md:h-20 bg-[#00786f]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all shadow-lg">
+                    <Crown className="text-[#00786f]" size={32} />
+                  </div>
+                  <p className="font-bold text-gray-900 text-lg mb-1">Premium</p>
+                  <p className="text-sm text-gray-600">Exclusive</p>
+                </div>
+              </Link>
             </div>
           </div>
         </section>
-
-        
 
         {/* Featured Products Section */}
-        <section className="py-8">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="flex justify-between items-center mb-6">
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4">
+            {/* Section Header */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Trending Now</h2>
-                <p className="text-sm text-gray-600 mt-1">Bestsellers this week</p>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Trending Now</h2>
+                <p className="text-gray-600">Bestsellers this week - Don't miss out!</p>
               </div>
               <Link href="/shop">
-                <Button variant="ghost" className="text-teal-600 hover:bg-teal-50">
-                  See All
-                  <ChevronRight size={18} />
+                <Button className="bg-[#00786f] hover:bg-[#006059] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all group">
+                  View All Products
+                  <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
                 </Button>
               </Link>
             </div>
 
+            {/* Products Grid */}
             {data.success && data.products.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
                 {data.products.map((product) => (
-                  <ProductCard key={product._id} product={product} />
+                  <Link 
+                    key={product._id} 
+                    href={`/product/${product._id}`}
+                    className="group block"
+                  >
+                    <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-[#00786f]/30 hover:-translate-y-2">
+                      {/* Product Image */}
+                      <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
+                        {product.images && product.images[0] ? (
+                          <img
+                            src={product.images[0]}
+                            alt={product.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            <ShoppingBag size={48} />
+                          </div>
+                        )}
+                        
+                        {/* Hover Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="absolute bottom-4 left-4 right-4">
+                            <Button className="w-full bg-white text-gray-900 hover:bg-gray-100 font-semibold rounded-lg shadow-lg">
+                              View Details
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        {/* Wishlist Button */}
+                        <button className="absolute top-3 right-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-[#00786f] hover:text-white transition-all group/heart">
+                          <Heart size={18} className="group-hover/heart:fill-current" />
+                        </button>
+                        
+                        {/* Badge */}
+                        {product.badge && (
+                          <div className="absolute top-3 left-3 bg-[#00786f] text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                            {product.badge}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Product Info */}
+                      <div className="p-4">
+                        <h3 className="font-bold text-gray-900 mb-1 line-clamp-2 group-hover:text-[#00786f] transition-colors">
+                          {product.name}
+                        </h3>
+                        
+                        {/* Rating */}
+                        {product.rating && (
+                          <div className="flex items-center gap-1 mb-2">
+                            <Star size={14} className="fill-yellow-400 text-yellow-400" />
+                            <span className="text-sm font-semibold text-gray-700">{product.rating}</span>
+                            <span className="text-xs text-gray-500">(250+ reviews)</span>
+                          </div>
+                        )}
+                        
+                        {/* Price */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="text-xl font-bold text-gray-900">₹{product.price}</span>
+                            {product.originalPrice && (
+                              <span className="text-sm text-gray-500 line-through ml-2">₹{product.originalPrice}</span>
+                            )}
+                          </div>
+                          <ShoppingBag size={20} className="text-gray-400 group-hover:text-[#00786f] transition-colors" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-600">No products available yet.</p>
+              <div className="text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+                <ShoppingBag size={64} className="text-gray-300 mx-auto mb-4" />
+                <p className="text-xl font-semibold text-gray-600 mb-2">No products available yet</p>
+                <p className="text-gray-500">Check back soon for amazing deals!</p>
               </div>
             )}
           </div>
         </section>
 
-        {/* Why Shop With Us */}
+        {/* Promotional Banner */}
         <section className="py-12 bg-gray-50">
-          <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Why Shop With Us</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all">
-                <div className="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-4">
-                  <Zap size={24} className="text-teal-600" />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-2">Fast Delivery</h3>
-                <p className="text-sm text-gray-600">
-                  Free shipping on orders over ₹500. Quick delivery to your doorstep.
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="bg-[#00786f] rounded-3xl p-6 md:p-16 text-white relative overflow-hidden shadow-2xl">
+              <div className="absolute inset-0 opacity-20">
+                <div className="absolute top-10 right-10 w-40 h-40 bg-white rounded-full blur-3xl"></div>
+                <div className="absolute bottom-10 left-10 w-60 h-60 bg-white rounded-full blur-3xl"></div>
+              </div>
+              <Sparkles className="absolute top-10 right-20 text-white/30 animate-pulse" size={60} />
+              <Tag className="absolute bottom-10 left-20 text-white/30 animate-pulse" size={50} />
+              
+              <div className="relative z-10 text-center max-w-3xl mx-auto">
+                <h2 className="text-3xl md:text-6xl font-bold mb-4">
+                  Exclusive Sale Event!
+                </h2>
+                <p className="text-xl md:text-2xl mb-8 text-white/90">
+                  Get flat 30% OFF on your first purchase. Limited time offer!
                 </p>
-              </div>
-
-              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                  <Star size={24} className="text-blue-600" />
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <Link href="/shop">
+                    <Button className="bg-white text-[#00786f] hover:bg-gray-100 font-bold px-10 py-6 rounded-xl text-lg shadow-2xl hover:scale-105 transition-all">
+                      Shop Now & Save
+                      <ArrowRight className="ml-2" size={20} />
+                    </Button>
+                  </Link>
+                  <div className="flex items-center gap-3 text-white">
+                    <div className="w-16 h-16 bg-white/20 rounded-full backdrop-blur-sm flex items-center justify-center font-bold text-2xl border-2 border-white/30">
+                      30%
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-lg">Limited Time</div>
+                      <div className="text-sm text-white/80">Ends Soon!</div>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2">Premium Quality</h3>
-                <p className="text-sm text-gray-600">100% authentic products. Handpicked collections for you.</p>
-              </div>
-
-              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                  <Heart size={24} className="text-green-600" />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-2">Customer Care</h3>
-                <p className="text-sm text-gray-600">7-day returns. Easy exchanges. Dedicated support team.</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-12 bg-white">
-          <div className="max-w-6xl mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to Explore?</h2>
-            <p className="text-gray-600 mb-8">Discover the latest fashion trends and exclusive offers</p>
+        {/* Why Shop With Us */}
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Why Shop With Us</h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Experience the best in fashion shopping with premium quality and exceptional service
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="group bg-white p-6 md:p-8 rounded-2xl border-2 border-gray-100 hover:border-[#00786f]/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                <div className="w-16 h-16 bg-[#00786f]/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all shadow-lg">
+                  <Zap className="text-[#00786f]" size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Fast Delivery</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Free shipping on orders over ₹500. Quick delivery to your doorstep within 3-5 business days.
+                </p>
+              </div>
+
+              <div className="group bg-white p-6 md:p-8 rounded-2xl border-2 border-gray-100 hover:border-[#00786f]/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                <div className="w-16 h-16 bg-[#00786f]/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all shadow-lg">
+                  <Star className="text-[#00786f]" size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Premium Quality</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  100% authentic products. Handpicked collections ensuring the finest quality for you.
+                </p>
+              </div>
+
+              <div className="group bg-white p-6 md:p-8 rounded-2xl border-2 border-gray-100 hover:border-[#00786f]/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                <div className="w-16 h-16 bg-[#00786f]/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all shadow-lg">
+                  <Heart className="text-[#00786f]" size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Customer Care</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  7-day easy returns. Hassle-free exchanges. Dedicated support team always ready to help.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA Section */}
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-4xl mx-auto px-4 text-center">
+            <div className="inline-block mb-6">
+              <div className="w-20 h-20 md:w-24 md:h-24 bg-[#00786f]/10 rounded-full flex items-center justify-center mx-auto shadow-2xl">
+                <ShoppingBag className="text-[#00786f]" size={40} />
+              </div>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
+              Ready to Explore?
+            </h2>
+            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+              Discover the latest fashion trends, exclusive offers, and premium collections tailored just for you
+            </p>
             <Link href="/shop">
-              <Button className="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-8 py-3 rounded-lg">
+              <Button className="bg-[#00786f] hover:bg-[#006059] text-white font-bold px-12 py-6 rounded-xl text-lg shadow-2xl hover:shadow-[#00786f]/50 transition-all hover:scale-105 group">
                 Start Shopping Now
+                <ArrowRight className="ml-2 group-hover:translate-x-2 transition-transform" size={20} />
               </Button>
             </Link>
           </div>

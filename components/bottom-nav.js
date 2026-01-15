@@ -41,7 +41,7 @@ export default function BottomNav() {
             <Link key={item.href} href={item.href} className="flex-1">
               <div
                 className={`flex flex-col items-center justify-center py-3 px-2 ${
-                  isActive ? "text-teal-600 border-t-2 border-teal-600" : "text-muted-foreground"
+                  isActive ? "text-[#00786f] border-t-2 border-[#00786f]" : "text-muted-foreground"
                 }`}
               >
                 <Icon size={24} />

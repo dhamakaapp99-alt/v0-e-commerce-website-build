@@ -96,7 +96,7 @@ export default function ProductCard({ product }) {
               className="p-3 bg-white rounded-full hover:bg-gray-100 transition-colors shadow-lg"
               title="Quick View"
             >
-              <Eye size={20} className="text-teal-600" />
+              <Eye size={20} className="text-[#00786f]" />
             </button>
             <button
               onClick={() => setIsWishlisted(!isWishlisted)}
@@ -129,7 +129,7 @@ export default function ProductCard({ product }) {
       </div>
 
       <div className="space-y-2">
-        <h3 className="font-semibold text-sm md:text-base line-clamp-2 text-gray-900 group-hover:text-teal-600 transition-colors">
+        <h3 className="font-semibold text-sm md:text-base line-clamp-2 text-gray-900 group-hover:text-[#00786f] transition-colors">
           {product.name}
         </h3>
         <p className="text-muted-foreground text-xs md:text-sm text-gray-600">{product.category}</p>
@@ -153,7 +153,7 @@ export default function ProductCard({ product }) {
           className={`w-full mt-3 font-semibold py-2 rounded-lg transition-all flex items-center justify-center gap-2 ${
             isInCart
               ? "bg-red-500 text-white hover:bg-red-600"
-              : "bg-teal-600 hover:bg-teal-700 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
+              : "bg-[#00786f] hover:bg-[#006059] text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
           }`}
         >
           {isInCart ? (
