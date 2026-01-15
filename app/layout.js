@@ -10,6 +10,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata = {
   title: "Mayra Collection - Premium Clothing Store",
   description: "Shop premium clothing at Mayra Collection",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
 }
 
 export default function RootLayout({ children }) {

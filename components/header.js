@@ -6,6 +6,8 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import Logo from "@/components/logo"
+import MayraLogo  from "@/public/mayra-new.png"
+import Image from "next/image"
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -61,7 +63,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 flex-shrink-0">
-            <Logo variant="icon" />
+            <Image src={MayraLogo} alt="Mayra Collection" width={200} height={200} className="rounded-full object-cover" />
           </Link>
 
           {/* Navigation */}
