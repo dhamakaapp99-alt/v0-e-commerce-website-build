@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useCart } from "@/hooks/use-cart"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ChevronLeft, Lock, CheckCircle2 } from "lucide-react"
+import { ChevronLeft, Lock, CheckCircle2, CreditCard } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import Header from "@/components/header"
@@ -14,6 +14,7 @@ export default function Checkout() {
   const { cart, getTotal, clearCart } = useCart()
   const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [payLaterLoading, setPayLaterLoading] = useState(false)
   const [errors, setErrors] = useState({})
   const [user, setUser] = useState(null)
   const [formData, setFormData] = useState({
@@ -123,8 +124,8 @@ export default function Checkout() {
     return newErrors
   }
 
-  const initializeRazorpayPayment = async (e) => {
-    e.preventDefault()
+  const initializeRazorpayPayment = async (e, isPayLater = false) => {
+    if (e) e.preventDefault()
     const newErrors = validateForm()
 
     if (Object.keys(newErrors).length > 0) {
@@ -132,7 +133,13 @@ export default function Checkout() {
       return
     }
 
-    setLoading(true)
+    if (isPayLater) {
+      setPayLaterLoading(true)
+    } else {
+      setLoading(true)
+    }
+
+    const amountToPay = isPayLater ? 199 : total + shipping
 
     try {
       // Create order on backend
@@ -143,7 +150,7 @@ export default function Checkout() {
         },
         body: JSON.stringify({
           items: cart,
-          totalAmount: total + shipping,
+          totalAmount: amountToPay,
           customerEmail: formData.email,
           customerPhone: formData.phone,
           shippingAddress: {
@@ -161,7 +168,7 @@ export default function Checkout() {
 
       if (!orderData.success) {
         alert("Failed to create order. Please try again.")
-        setLoading(false)
+        if (isPayLater) setPayLaterLoading(false); else setLoading(false)
         return
       }
 
@@ -224,6 +231,7 @@ export default function Checkout() {
           modal: {
             ondismiss: () => {
               setLoading(false)
+              setPayLaterLoading(false)
             },
           },
         }
@@ -236,6 +244,7 @@ export default function Checkout() {
       alert("An error occurred. Please try again.")
     } finally {
       setLoading(false)
+      setPayLaterLoading(false)
     }
   }
 
@@ -268,7 +277,7 @@ export default function Checkout() {
                       <Input
                         type="text"
                         name="name"
-                        placeholder="John Doe"
+                        placeholder="Warish"
                         value={formData.name}
                         onChange={handleInputChange}
                         className={`border-2 rounded-lg py-3 ${errors.name ? "border-red-500" : "border-gray-200"}`}
@@ -282,7 +291,7 @@ export default function Checkout() {
                         <Input
                           type="email"
                           name="email"
-                          placeholder="john@example.com"
+                          placeholder="warish@example.com"
                           value={formData.email}
                           onChange={handleInputChange}
                           className={`border-2 rounded-lg py-3 ${errors.email ? "border-red-500" : "border-gray-200"}`}
@@ -366,15 +375,27 @@ export default function Checkout() {
                   </div>
                 </div>
 
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-6 text-lg rounded-lg flex items-center justify-center gap-2 hidden md:flex"
-                  disabled={loading}
-                >
-                  <Lock size={20} />
-                  {loading ? "Processing..." : `Pay ₹${(total + shipping).toLocaleString("en-IN")}`}
-                </Button>
+                <div className="hidden md:flex gap-4">
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-6 text-lg rounded-lg flex items-center justify-center gap-2"
+                    disabled={loading || payLaterLoading}
+                  >
+                    <Lock size={20} />
+                    {loading ? "Processing..." : `Pay ₹${(total + shipping).toLocaleString("en-IN")}`}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={(e) => initializeRazorpayPayment(e, true)}
+                    size="lg"
+                    className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-6 text-lg rounded-lg flex items-center justify-center gap-2"
+                    disabled={loading || payLaterLoading}
+                  >
+                    <CreditCard size={20} />
+                    {payLaterLoading ? "Processing..." : "Pay Later (₹199)"}
+                  </Button>
+                </div>
               </form>
             </div>
 
@@ -413,33 +434,51 @@ export default function Checkout() {
                   </div>
                 </div>
 
-                <form onSubmit={initializeRazorpayPayment} className="md:hidden">
+                <div className="md:hidden flex flex-col gap-3">
                   <Button
-                    type="submit"
+                    onClick={(e) => initializeRazorpayPayment(e, false)}
                     size="lg"
                     className="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-6 text-lg rounded-lg flex items-center justify-center gap-2"
-                    disabled={loading}
+                    disabled={loading || payLaterLoading}
                   >
                     <Lock size={20} />
                     {loading ? "Processing..." : "Proceed to Pay"}
                   </Button>
-                </form>
+                  <Button
+                    onClick={(e) => initializeRazorpayPayment(e, true)}
+                    size="lg"
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-6 text-lg rounded-lg flex items-center justify-center gap-2"
+                    disabled={loading || payLaterLoading}
+                  >
+                    <CreditCard size={20} />
+                    {payLaterLoading ? "Processing..." : "Pay Later (₹199)"}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Mobile Submit Button */}
-          <form onSubmit={initializeRazorpayPayment} className="md:hidden mt-8">
+          <div className="md:hidden mt-8 flex flex-col gap-3">
             <Button
-              type="submit"
+              onClick={(e) => initializeRazorpayPayment(e, false)}
               size="lg"
               className="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-6 text-lg rounded-lg flex items-center justify-center gap-2"
-              disabled={loading}
+              disabled={loading || payLaterLoading}
             >
               <Lock size={20} />
               {loading ? "Processing..." : `Pay ₹${(total + shipping).toLocaleString("en-IN")}`}
             </Button>
-          </form>
+            <Button
+              onClick={(e) => initializeRazorpayPayment(e, true)}
+              size="lg"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-6 text-lg rounded-lg flex items-center justify-center gap-2"
+              disabled={loading || payLaterLoading}
+            >
+              <CreditCard size={20} />
+              {payLaterLoading ? "Processing..." : "Pay Later (₹199)"}
+            </Button>
+          </div>
         </div>
       </div>
     </>

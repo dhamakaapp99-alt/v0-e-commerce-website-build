@@ -75,13 +75,24 @@ export default function ProductCard({ product }) {
     router.push(`/product/${product._id}`)
   }
 
+  const handleCardClick = () => {
+    router.push(`/product/${product._id}`)
+  }
+
+  const handleWishlist = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsWishlisted(!isWishlisted)
+  }
+
   return (
     <div
-      className="group cursor-pointer"
+      onClick={handleCardClick}
+      className="group cursor-pointer bg-white rounded-2xl p-2 md:p-3 border border-transparent hover:border-gray-100 hover:shadow-2xl transition-all duration-300 h-full flex flex-col"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative overflow-hidden rounded-xl bg-gray-100 aspect-square mb-4 shadow-sm hover:shadow-xl transition-all duration-300">
+      <div className="relative overflow-hidden rounded-xl bg-gray-100 aspect-[3/4] mb-3 w-full shadow-sm">
         <Image
           src={product.images?.[0] || "/placeholder.svg?height=300&width=300&query=clothing"}
           alt={product.name}
@@ -99,7 +110,7 @@ export default function ProductCard({ product }) {
               <Eye size={20} className="text-[#00786f]" />
             </button>
             <button
-              onClick={() => setIsWishlisted(!isWishlisted)}
+              onClick={handleWishlist}
               className="p-3 bg-white rounded-full hover:bg-gray-100 transition-colors shadow-lg"
               title="Add to Wishlist"
             >
@@ -128,7 +139,7 @@ export default function ProductCard({ product }) {
         )}
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2 flex-1 flex flex-col">
         <h3 className="font-semibold text-sm md:text-base line-clamp-2 text-gray-900 group-hover:text-[#00786f] transition-colors">
           {product.name}
         </h3>
@@ -147,10 +158,11 @@ export default function ProductCard({ product }) {
 
         <p className="font-bold text-lg text-gray-900">₹{product.price.toLocaleString("en-IN")}</p>
 
+        <div className="mt-auto pt-2">
         <button
           onClick={handleQuickAddToCart}
           disabled={product.stock === 0}
-          className={`w-full mt-3 font-semibold py-2 rounded-lg transition-all flex items-center justify-center gap-2 ${
+          className={`w-full font-semibold py-2 rounded-lg transition-all flex items-center justify-center gap-2 ${
             isInCart
               ? "bg-red-500 text-white hover:bg-red-600"
               : "bg-[#00786f] hover:bg-[#006059] text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
@@ -158,7 +170,7 @@ export default function ProductCard({ product }) {
         >
           {isInCart ? (
             <>
-              <span>✕ Remove from Cart</span>
+              <span>Added</span>
             </>
           ) : (
             <>
@@ -167,6 +179,7 @@ export default function ProductCard({ product }) {
             </>
           )}
         </button>
+        </div>
       </div>
     </div>
   )

@@ -6,6 +6,7 @@ import Footer from "@/components/footer"
 import { ChevronRight, ShoppingBag, Heart, Zap, Star, TrendingUp, Sparkles, ArrowRight, Crown, Tag } from "lucide-react"
 import Image from "next/image"
 import HeroSlider from "@/components/hero-slider"
+import Script from "next/script"
 
 export default async function Home() {
   let data = { success: false, products: [] }
@@ -292,6 +293,57 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
+        {/* Visit Our Stores Section */}
+        <section className="py-16 bg-gray-50 border-t border-gray-200">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Visit Our Stores</h2>
+              <p className="text-gray-600">Experience our collection in person at our branches</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+              {/* Branch 1: Tijara Alwar */}
+              <div className="group rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white">
+                <div className="relative h-64 md:h-80 overflow-hidden">
+                  <img 
+                    src="https://lh3.googleusercontent.com/p/AF1QipMWHfJcKpGoFgaCSrgCVP7JJVf79OF_eWVimXvI=s1360-w1360-h1020-rw" 
+                    alt="Mayra Collection Tijara Alwar" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
+                    <div className="text-white">
+                      <h3 className="text-2xl font-bold mb-1">Tijara, Alwar</h3>
+                      <p className="text-gray-200 font-medium">Mayra Collection Branch</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Branch 2: Nuh */}
+              <div className="group rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white">
+                <div className="relative h-64 md:h-80 overflow-hidden">
+                  <img 
+                    src="https://lh3.googleusercontent.com/p/AF1QipNNmONsjoiqfezKnFnDPyv0fkDQEs9w4ESQYC_W=s1360-w1360-h1020-rw" 
+                    alt="Mayra Collection Nuh" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
+                    <div className="text-white">
+                      <h3 className="text-2xl font-bold mb-1">Nuh</h3>
+                      <p className="text-gray-200 font-medium">Mayra Collection Branch</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Instagram Reel */}
+        
+      
+          </div>
+        </section>
+        {/* <Script src="//www.instagram.com/embed.js" strategy="lazyOnload" /> */}
 
         {/* Final CTA Section */}
         <section className="py-16 bg-gray-50">
