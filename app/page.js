@@ -23,6 +23,10 @@ export default async function Home() {
     console.error("Failed to fetch products:", error)
   }
 
+
+  console.log("data.....",data);
+  
+
   return (
     <>
       <Header />
